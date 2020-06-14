@@ -4,7 +4,7 @@
 [![Dependency Status](https://david-dm.org/uttori/uttori-image-png.svg)](https://david-dm.org/uttori/uttori-image-png)
 [![Coverage Status](https://coveralls.io/repos/uttori/@uttori/image-png/badge.svg?branch=master)](https://coveralls.io/r/uttori/uttori-image-png?branch=master)
 
-# Uttori Template
+# Uttori ImagePNG
 
 A PNG Decoder and meta data reading utility.
 
@@ -26,8 +26,13 @@ npm install --save @uttori/image-png
 # Example
 
 ```js
-const Template = require('@uttori/image-png');
-const png = ImagePNG.fromFile('../image.png');
+const image_data = await FileUtility.readFile('./test/assets/PngSuite', 'oi1n0g16', 'png', null);
+const image = ImagePNG.fromFile(image_data);
+image.decodePixels();
+const length = image.pixels.length;
+➜ 6144
+const pixel = image.getPixel(0, 0);
+➜ [255, 255, 255, 255]
 ```
 
 # API Reference
