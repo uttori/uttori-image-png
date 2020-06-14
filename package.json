@@ -1,0 +1,98 @@
+{
+  "name": "@uttori/image-png",
+  "version": "1.0.0",
+  "description": "A PNG Decoder and meta data reading utility.",
+  "author": "Matthew Callis <matthew.callis@gmail.com>",
+  "contributors": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uttori/uttori-image-png.git"
+  },
+  "homepage": "https://github.com/uttori/uttori-image-png",
+  "keywords": [
+    "uttori"
+  ],
+  "engines": {
+    "node": ">= 12"
+  },
+  "dependencies": {
+    "@uttori/data-tools": "^1.0.2",
+    "debug": "^4.1.1"
+  },
+  "devDependencies": {
+    "ava": "^3.8.2",
+    "coveralls": "^3.1.0",
+    "docsify-cli": "^4.4.1",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-ava": "^10.3.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsdoc": "^27.0.6",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-no-inferred-method-name": "^2.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-optimize-regex": "^1.2.0",
+    "eslint-plugin-ramda": "^2.5.1",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-unicorn": "^20.1.0",
+    "eslint-plugin-xss": "^0.1.10",
+    "jsdoc": "^3.6.4",
+    "jsdoc-to-markdown": "^6.0.1",
+    "nyc": "^15.1.0",
+    "pre-commit": "^1.2.2",
+    "release-it": "^13.6.3",
+    "sinon": "^9.0.2",
+    "tsd-jsdoc": "^2.5.0",
+    "uttori-utilities": "^2.3.0"
+  },
+  "files": [
+    "src/*"
+  ],
+  "main": "src/index.js",
+  "types": "./index.d.ts",
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "ignoredByWatcher": [
+      "!src/**/*.js"
+    ],
+    "concurrency": 1,
+    "failFast": false,
+    "tap": false,
+    "verbose": true
+  },
+  "nyc": {
+    "cache": true,
+    "all": true,
+    "check-coverage": false,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": []
+  },
+  "scripts": {
+    "docs": "jsdoc2md --private --example-lang js --template README.hbs src/data-image-png.js > README.md",
+    "docs-serve": "docsify init ./docs && docsify serve ./docs",
+    "lint": "eslint .",
+    "make-types": "jsdoc -t node_modules/tsd-jsdoc/dist -r ./src --destination ./; mv types.d.ts index.d.ts",
+    "release": "release-it",
+    "report": "nyc report --reporter=html",
+    "test": "NODE_ENV=test nyc ava --serial",
+    "test-debug": "DEBUG=Uttori* NODE_ENV=test ava --serial",
+    "validate": "npm ls"
+  },
+  "bugs": {
+    "url": "https://github.com/uttori/uttori-image-png/issues"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
+}

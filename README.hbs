@@ -1,0 +1,55 @@
+[![view on npm](http://img.shields.io/npm/v/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
+[![npm module downloads](http://img.shields.io/npm/dt/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
+[![Build Status](https://travis-ci.org/uttori/uttori-image-png.svg?branch=master)](https://travis-ci.org/uttori/uttori-image-png)
+[![Dependency Status](https://david-dm.org/uttori/uttori-image-png.svg)](https://david-dm.org/uttori/uttori-image-png)
+[![Coverage Status](https://coveralls.io/repos/uttori/@uttori/image-png/badge.svg?branch=master)](https://coveralls.io/r/uttori/uttori-image-png?branch=master)
+
+# Uttori Template
+
+A PNG Decoder and meta data reading utility.
+
+## Install
+
+```bash
+npm install --save @uttori/image-png
+```
+
+# Config
+
+```js
+{
+}
+```
+
+* * *
+
+# Example
+
+```js
+const Template = require('@uttori/image-png');
+const png = ImagePNG.fromFile('../image.png');
+```
+
+# API Reference
+
+{{>main}}
+
+* * *
+
+## Tests
+
+To run the test suite, first install the dependencies, then run `npm test`:
+
+```bash
+npm install
+npm test
+DEBUG=Uttori* npm test
+```
+
+## Contributors
+
+* [Matthew Callis](https://github.com/MatthewCallis)
+
+## License
+
+* [MIT](LICENSE)
