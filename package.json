@@ -49,10 +49,12 @@
     "uttori-utilities": "^2.3.0"
   },
   "files": [
-    "src/*"
+    "src/*",
+    "types/*"
   ],
   "main": "src/index.js",
-  "types": "./index.d.ts",
+  "types": "types/index.d.ts",
+  "typings": "types/index.d.ts",
   "ava": {
     "files": [
       "test/**/*.test.js"
@@ -78,7 +80,7 @@
     "docs": "jsdoc2md --private --example-lang js --template README.hbs src/data-image-png.js > README.md",
     "docs-serve": "docsify init ./docs && docsify serve ./docs",
     "lint": "eslint .",
-    "make-types": "jsdoc -t node_modules/tsd-jsdoc/dist -r ./src --destination ./; mv types.d.ts index.d.ts",
+    "make-types": "jsdoc -t node_modules/tsd-jsdoc/dist -r ./src --destination ./; mv types.d.ts types/index.d.ts",
     "release": "release-it",
     "report": "nyc report --reporter=html",
     "test": "NODE_ENV=test nyc ava --serial",
