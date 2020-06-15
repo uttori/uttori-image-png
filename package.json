@@ -77,7 +77,7 @@
     "exclude": []
   },
   "scripts": {
-    "docs": "jsdoc2md --private --example-lang js --template README.hbs src/data-image-png.js > README.md",
+    "docs": "jsdoc2md --private --example-lang js --template rm.hbs src/data-image-png.js > README.md",
     "docs-serve": "docsify init ./docs && docsify serve ./docs",
     "lint": "eslint .",
     "make-types": "jsdoc -t node_modules/tsd-jsdoc/dist -r ./src --destination ./; mv types.d.ts types/index.d.ts",
