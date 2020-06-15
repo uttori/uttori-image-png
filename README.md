@@ -2,7 +2,7 @@
 [![npm module downloads](http://img.shields.io/npm/dt/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
 [![Build Status](https://travis-ci.org/uttori/uttori-image-png.svg?branch=master)](https://travis-ci.org/uttori/uttori-image-png)
 [![Dependency Status](https://david-dm.org/uttori/uttori-image-png.svg)](https://david-dm.org/uttori/uttori-image-png)
-[![Coverage Status](https://coveralls.io/repos/uttori/@uttori/image-png/badge.svg?branch=master)](https://coveralls.io/r/uttori/uttori-image-png?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/uttori/uttori-image-png/badge.svg?branch=master)](https://coveralls.io/github/uttori/uttori-image-png?branch=master)
 
 # Uttori ImagePNG
 
