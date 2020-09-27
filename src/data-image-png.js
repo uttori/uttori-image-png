@@ -53,11 +53,15 @@ class ImagePNG extends DataStream {
    * Creates a new ImagePNG.
    *
    * @param {DataBufferList} list - The DataBufferList of the image to process.
-   * @param {object} options - Options for this instance.
-   * @param {number} [options.size=16] - ArrayBuffer byteLength for the underlying binary parsing.
+   * @param {object} [overrides] - Options for this instance.
+   * @param {number} [overrides.size=16] - ArrayBuffer byteLength for the underlying binary parsing.
    * @class
    */
-  constructor(list, options = { size: 16 }) {
+  constructor(list, overrides = {}) {
+    const options = {
+      size: 16,
+      ...overrides,
+    };
     super(list, options);
 
     // PNG Specific Details
