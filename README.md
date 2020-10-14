@@ -78,7 +78,7 @@ PNG Decoder
 
 
 * [ImagePNG](#ImagePNG)
-    * [new ImagePNG(list, options)](#new_ImagePNG_new)
+    * [new ImagePNG(list, [overrides])](#new_ImagePNG_new)
     * _instance_
         * [.setBitDepth(bitDepth)](#ImagePNG+setBitDepth)
         * [.setColorType(colorType)](#ImagePNG+setColorType)
@@ -106,15 +106,15 @@ PNG Decoder
 
 <a name="new_ImagePNG_new"></a>
 
-### new ImagePNG(list, options)
+### new ImagePNG(list, [overrides])
 Creates a new ImagePNG.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | list | <code>DataBufferList</code> |  | The DataBufferList of the image to process. |
-| options | <code>object</code> |  | Options for this instance. |
-| [options.size] | <code>number</code> | <code>16</code> | ArrayBuffer byteLength for the underlying binary parsing. |
+| [overrides] | <code>object</code> |  | Options for this instance. |
+| [overrides.size] | <code>number</code> | <code>16</code> | ArrayBuffer byteLength for the underlying binary parsing. |
 
 **Example** *(new ImagePNG(list, options))*  
 ```js

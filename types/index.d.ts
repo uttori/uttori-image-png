@@ -28,11 +28,11 @@
  * @property dataChunks - Image Data pieces
  * @property header - PNG Signature from the data
  * @param list - The DataBufferList of the image to process.
- * @param options - Options for this instance.
- * @param [options.size = 16] - ArrayBuffer byteLength for the underlying binary parsing.
+ * @param [overrides] - Options for this instance.
+ * @param [overrides.size = 16] - ArrayBuffer byteLength for the underlying binary parsing.
  */
 declare class ImagePNG {
-    constructor(list: DataBufferList, options: {
+    constructor(list: DataBufferList, overrides?: {
         size?: number;
     });
     /**
