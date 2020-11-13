@@ -23,7 +23,7 @@
     "node": ">= 12"
   },
   "dependencies": {
-    "@uttori/data-tools": "^1.5.0",
+    "@uttori/data-tools": "^1.5.1",
     "debug": "^4.2.0"
   },
   "devDependencies": {
