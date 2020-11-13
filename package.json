@@ -23,34 +23,34 @@
     "node": ">= 12"
   },
   "dependencies": {
-    "@uttori/data-tools": "^1.4.0",
+    "@uttori/data-tools": "^1.5.0",
     "debug": "^4.2.0"
   },
   "devDependencies": {
     "ava": "^3.13.0",
     "coveralls": "^3.1.0",
     "docsify-cli": "^4.4.1",
-    "eslint": "^7.11.0",
-    "eslint-config-airbnb": "^18.2.0",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-ava": "^11.0.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^30.6.5",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-jsdoc": "^30.7.7",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-no-inferred-method-name": "^2.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-optimize-regex": "^1.2.0",
     "eslint-plugin-ramda": "^2.5.1",
-    "eslint-plugin-react": "^7.21.4",
-    "eslint-plugin-react-hooks": "^4.1.2",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-security": "^1.4.0",
-    "eslint-plugin-unicorn": "^22.0.0",
+    "eslint-plugin-unicorn": "^23.0.0",
     "eslint-plugin-xss": "^0.1.10",
     "jsdoc": "^3.6.6",
     "jsdoc-to-markdown": "^6.0.1",
     "nyc": "^15.1.0",
     "pre-commit": "^1.2.2",
-    "release-it": "^14.1.0",
-    "sinon": "^9.2.0",
+    "release-it": "^14.2.1",
+    "sinon": "^9.2.1",
     "tsd-jsdoc": "^2.5.0",
     "uttori-utilities": "^2.3.0"
   },
@@ -68,7 +68,7 @@
     "ignoredByWatcher": [
       "!src/**/*.js"
     ],
-    "concurrency": 1,
+    "concurrency": 4,
     "failFast": false,
     "tap": false,
     "verbose": true
@@ -82,15 +82,20 @@
     ],
     "exclude": []
   },
+  "release-it": {
+    "github": {
+      "release": true
+    }
+  },
   "scripts": {
     "docs": "jsdoc2md --private --example-lang js --template rm.hbs src/data-image-png.js > README.md",
     "docs-serve": "docsify init ./docs && docsify serve ./docs",
     "lint": "eslint .",
-    "make-types": "jsdoc -t node_modules/tsd-jsdoc/dist -r ./src --destination ./; mv types.d.ts types/index.d.ts",
+    "make-types": "rm -fr types/ && mkdir types && tsc --project .tsconfig.json",
     "release": "release-it",
     "report": "nyc report --reporter=html",
     "test": "NODE_ENV=test nyc ava --serial",
-    "test-debug": "DEBUG=Uttori* NODE_ENV=test ava --serial",
+    "test-debug": "DEBUG=Uttori* NODE_ENV=test ava --serial --concurrency=1",
     "validate": "npm ls"
   },
   "directories": {

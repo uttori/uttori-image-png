@@ -25,13 +25,9 @@
     "browser": true,
     "mocha": true
   },
-  "globals": {
-    "sinon": false,
-    "mocha": true,
-    "expect": true
-  },
+  "globals": {},
   "parserOptions": {
-    "ecmaVersion": 2020
+    "ecmaVersion": 2021
   },
   "rules": {
     "import/no-extraneous-dependencies": [

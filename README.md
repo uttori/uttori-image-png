@@ -1,5 +1,5 @@
-[![view on npm](http://img.shields.io/npm/v/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
-[![npm module downloads](http://img.shields.io/npm/dt/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
+[![view on npm](https://img.shields.io/npm/v/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
+[![npm module downloads](https://img.shields.io/npm/dt/@uttori/image-png.svg)](https://www.npmjs.org/package/@uttori/image-png)
 [![Build Status](https://travis-ci.org/uttori/uttori-image-png.svg?branch=master)](https://travis-ci.org/uttori/uttori-image-png)
 [![Dependency Status](https://david-dm.org/uttori/uttori-image-png.svg)](https://david-dm.org/uttori/uttori-image-png)
 [![Coverage Status](https://coveralls.io/repos/github/uttori/uttori-image-png/badge.svg?branch=master)](https://coveralls.io/github/uttori/uttori-image-png?branch=master)
@@ -143,12 +143,13 @@ Sets the bitDepth on the ImagePNG instance.
 Sets the colorType on the ImagePNG instance.
 Both color and alpha properties are inferred from the colorType.
 
-Color Type | Allowed Bit Depths | Interpretation
-0          | 1,2,4,8,16         | Each pixel is a grayscale sample.
-2          | 8,16               | Each pixel is an R,G,B triple.
-3          | 1,2,4,8            | Each pixel is a palette index; a PLTE chunk must appear.
-4          | 8,16               | Each pixel is a grayscale sample, followed by an alpha sample.
-6          | 8,16               | Each pixel is an R,G,B triple, followed by an alpha sample.
+| Color Type | Allowed Bit Depths | Interpretation |
+|------------|--------------------|----------------|
+| 0          | 1, 2, 4, 8, 16     | Each pixel is a grayscale sample.
+| 2          | 8, 16              | Each pixel is an R, G, B triple.
+| 3          | 1, 2, 4, 8         | Each pixel is a palette index; a `PLTE` chunk must appear.
+| 4          | 8, 16              | Each pixel is a grayscale sample, followed by an alpha sample.
+| 6          | 8, 16              | Each pixel is an R, G, B triple, followed by an alpha sample.
 
 **Kind**: instance method of [<code>ImagePNG</code>](#ImagePNG)  
 **Throws**:

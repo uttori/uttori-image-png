@@ -137,12 +137,13 @@ class ImagePNG extends DataStream {
    * Sets the colorType on the ImagePNG instance.
    * Both color and alpha properties are inferred from the colorType.
    *
-   * Color Type | Allowed Bit Depths | Interpretation
-   * 0          | 1,2,4,8,16         | Each pixel is a grayscale sample.
-   * 2          | 8,16               | Each pixel is an R,G,B triple.
-   * 3          | 1,2,4,8            | Each pixel is a palette index; a PLTE chunk must appear.
-   * 4          | 8,16               | Each pixel is a grayscale sample, followed by an alpha sample.
-   * 6          | 8,16               | Each pixel is an R,G,B triple, followed by an alpha sample.
+   * | Color Type | Allowed Bit Depths | Interpretation |
+   * |------------|--------------------|----------------|
+   * | 0          | 1, 2, 4, 8, 16     | Each pixel is a grayscale sample.
+   * | 2          | 8, 16              | Each pixel is an R, G, B triple.
+   * | 3          | 1, 2, 4, 8         | Each pixel is a palette index; a `PLTE` chunk must appear.
+   * | 4          | 8, 16              | Each pixel is a grayscale sample, followed by an alpha sample.
+   * | 6          | 8, 16              | Each pixel is an R, G, B triple, followed by an alpha sample.
    *
    * @param {number} colorType - The colorType to set, one of: 0, 2, 3, 4, 6
    * @throws {Error} Invalid Color Type, anything other than 0, 2, 3, 4, 6
@@ -594,12 +595,7 @@ class ImagePNG extends DataStream {
     let offset = 0;
     while (chunk.remainingBytes() > 0) {
       const type = chunk.readUInt8();
-      let scanline;
-      if (chunk.remainingBytes() < color_bytes_per_row) {
-        scanline = chunk.read(chunk.remainingBytes(), this.nativeEndian);
-      } else {
-        scanline = chunk.read(color_bytes_per_row, this.nativeEndian);
-      }
+      const scanline = chunk.remainingBytes() < color_bytes_per_row ? chunk.read(chunk.remainingBytes(), this.nativeEndian) : chunk.read(color_bytes_per_row, this.nativeEndian);
       // debug('chunk filter type:', type);
       switch (type) {
         case 0: {
