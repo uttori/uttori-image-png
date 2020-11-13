@@ -1,6 +1,6 @@
 {
   "name": "@uttori/image-png",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A PNG Decoder and meta data reading utility.",
   "author": "Matthew Callis <matthew.callis@gmail.com>",
   "contributors": [],
