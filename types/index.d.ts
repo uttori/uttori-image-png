@@ -1,8 +1,6 @@
 declare module "data-image-png" {
     export = ImagePNG;
-    const ImagePNG_base: any;
-    class ImagePNG extends ImagePNG_base {
-        [x: string]: any;
+    class ImagePNG {
         static fromFile(data: Buffer): ImagePNG;
         static fromBuffer(buffer: any): ImagePNG;
         constructor(list: any, overrides?: {
@@ -45,11 +43,11 @@ declare module "data-image-png" {
         decodeIEND(_chunk: Uint8Array): void;
         decodePixels(): void;
         interlaceNone(data: Buffer): void;
-        unFilterNone(scanline: Array | Uint8Array, bpp: number, offset: number, length: number): void;
-        unFilterSub(scanline: Array | Uint8Array, bpp: number, offset: number, length: number): void;
-        unFilterUp(scanline: Array | Uint8Array, _bpp: number, offset: number, length: number): void;
-        unFilterAverage(scanline: Array | Uint8Array, bpp: number, offset: number, length: number): void;
-        unFilterPaeth(scanline: Array | Uint8Array, bpp: number, offset: number, length: number): void;
+        unFilterNone(scanline: any[] | Uint8Array, bpp: number, offset: number, length: number): void;
+        unFilterSub(scanline: any[] | Uint8Array, bpp: number, offset: number, length: number): void;
+        unFilterUp(scanline: any[] | Uint8Array, _bpp: number, offset: number, length: number): void;
+        unFilterAverage(scanline: any[] | Uint8Array, bpp: number, offset: number, length: number): void;
+        unFilterPaeth(scanline: any[] | Uint8Array, bpp: number, offset: number, length: number): void;
     }
 }
 declare module "index" {

@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-const debug = require('debug')('Uttori.Utilities.ImagePNG');
+let debug = () => {}; try { debug = require('debug')('Uttori.Utilities.ImagePNG'); } catch {}
 const zlib = require('zlib');
 
 const { DataBuffer, DataBufferList, DataStream } = require('@uttori/data-tools');
@@ -216,7 +216,7 @@ class ImagePNG extends DataStream {
    * Sets the palette on the ImagePNG instance.
    *
    * @param {number[] | Uint8Array} palette - The palette to set
-   * @throws {Error} No color in the palette
+   * @throws {Error} No colors in the palette
    * @throws {Error} Too many colors for the current bit depth
    */
   setPalette(palette) {
@@ -536,6 +536,7 @@ class ImagePNG extends DataStream {
     if (this.dataChunks.length === 0) {
       throw new Error('No IDAT chunks to decode.');
     }
+    // eslint-disable-next-line unicorn/no-array-reduce
     const length = this.dataChunks.reduce((accumulator, chunk) => accumulator + chunk.length, 0);
     debug('Data Chunks Total Size:', length);
     const data = Buffer.from(new Uint8Array(length));

@@ -217,7 +217,7 @@ Sets the palette on the ImagePNG instance.
 **Kind**: instance method of [<code>ImagePNG</code>](#ImagePNG)  
 **Throws**:
 
-- <code>Error</code> No color in the palette
+- <code>Error</code> No colors in the palette
 - <code>Error</code> Too many colors for the current bit depth
 
 
