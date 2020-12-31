@@ -1,7 +1,6 @@
 /* eslint-disable no-bitwise */
 let debug = () => {}; try { debug = require('debug')('Uttori.Utilities.ImagePNG'); } catch {}
 const zlib = require('zlib');
-
 const { DataBuffer, DataBufferList, DataStream } = require('@uttori/data-tools');
 
 // TODO Hacker PNGs

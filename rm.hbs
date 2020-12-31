@@ -3,6 +3,10 @@
 [![Build Status](https://travis-ci.org/uttori/uttori-image-png.svg?branch=master)](https://travis-ci.org/uttori/uttori-image-png)
 [![Dependency Status](https://david-dm.org/uttori/uttori-image-png.svg)](https://david-dm.org/uttori/uttori-image-png)
 [![Coverage Status](https://coveralls.io/repos/github/uttori/uttori-image-png/badge.svg?branch=master)](https://coveralls.io/github/uttori/uttori-image-png?branch=master)
+[![Tree-Shaking Support](https://badgen.net/bundlephobia/tree-shaking/@uttori/image-png)](https://bundlephobia.com/result?p=@uttori/image-png)
+[![Dependency Count](https://badgen.net/bundlephobia/dependency-count/@uttori/image-png)](https://bundlephobia.com/result?p=@uttori/image-png)
+[![Minified + GZip](https://badgen.net/bundlephobia/minzip/@uttori/image-png)](https://bundlephobia.com/result?p=@uttori/image-png)
+[![Minified](https://badgen.net/bundlephobia/min/@uttori/image-png)](https://bundlephobia.com/result?p=@uttori/image-png)
 
 # Uttori ImagePNG
 
