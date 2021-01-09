@@ -1,13 +1,12 @@
-/* eslint-disable no-bitwise */
-let debug = () => {}; try { debug = require('debug')('Uttori.Utilities.ImagePNG'); } catch {}
-const zlib = require('zlib');
-const { DataBuffer, DataBufferList, DataStream } = require('@uttori/data-tools');
-
-// TODO Hacker PNGs
-// https://github.com/fuzzdb-project/fuzzdb/tree/master/attack/file-upload
-// https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/
-// https://hackerone.com/reports/390
-// https://www.welivesecurity.com/2016/12/06/readers-popular-websites-targeted-stealthy-stegano-exploit-kit-hiding-pixels-malicious-ads/
+/* eslint-disable node/no-missing-require */
+/* eslint-disable import/no-unresolved */
+let debug = () => {}; /* istanbul ignore next */ if (process.env.UTTORI_IMAGEPNG_DEBUG) { try { debug = require('debug')('ImagePNG'); } catch {} }
+// const zlib = require('zlib');
+// const pako = require('pako');
+const pako = require('pako/inflate');
+const DataBuffer = require('@uttori/data-tools/data-buffer');
+const DataBufferList = require('@uttori/data-tools/data-buffer-list');
+const DataStream = require('@uttori/data-tools/data-stream');
 
 /**
  * PNG Decoder
@@ -102,7 +101,7 @@ class ImagePNG extends DataStream {
     const buffer = new DataBuffer(data);
     const list = new DataBufferList();
     list.append(buffer);
-    return new ImagePNG(list, { size: data.length });
+    return new ImagePNG(list, { size: buffer.length });
   }
 
   /**
@@ -538,7 +537,7 @@ class ImagePNG extends DataStream {
     // eslint-disable-next-line unicorn/no-array-reduce
     const length = this.dataChunks.reduce((accumulator, chunk) => accumulator + chunk.length, 0);
     debug('Data Chunks Total Size:', length);
-    const data = Buffer.from(new Uint8Array(length));
+    const data = new Uint8Array(length);
     for (let i = 0, k = 0, l = this.dataChunks.length; i < l; i++) {
       const chunk = this.dataChunks[i];
       for (let j = 0; j < chunk.length; j++) {
@@ -548,7 +547,8 @@ class ImagePNG extends DataStream {
 
     let out;
     try {
-      out = zlib.inflateSync(data);
+      // out = zlib.inflateSync(data);
+      out = pako.inflate(data);
     } catch (err) {
       /* istanbul ignore next */
       debug('Error Inflating:', err);
