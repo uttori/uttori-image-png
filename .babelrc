@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers":  [
+            "last 1 version",
+            "not ie 11",
+            "not samsung 13",
+            "not dead"
+          ]
+        },
+        "modules": false,
+        "debug": true,
+        "useBuiltIns": false, // "usage",
+        "corejs": 3
+      }
+    ]
+  ]
+}
