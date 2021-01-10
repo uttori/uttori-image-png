@@ -23,8 +23,7 @@
     "node": ">= 14"
   },
   "dependencies": {
-    "@uttori/data-tools": "file:../uttori-data-tools",
-    "pako": "file:../pako"
+    "@uttori/data-tools": "^2.0.1"
   },
   "optionalDependencies": {
     "debug": "^4.3.1"
@@ -56,6 +55,7 @@
     "jsdoc": "^3.6.6",
     "jsdoc-to-markdown": "^6.0.1",
     "nyc": "^15.1.0",
+    "pako": "^2.0.3",
     "pre-commit": "^1.2.2",
     "release-it": "^14.2.2",
     "rollup": "^2.36.1",
@@ -108,6 +108,7 @@
     "docs": "jsdoc2md --private --example-lang js --template rm.hbs src/data-image-png.js > README.md",
     "docs-serve": "docsify init ./docs && docsify serve ./docs",
     "lint": "eslint .",
+    "make-browser": "rollup -c rollup.config.js",
     "make-demo": "rm demo/png.js; rollup -c demo/rollup.config.js",
     "make-types": "rm -fr types/ && mkdir types && tsc --project .tsconfig.json",
     "release": "release-it",
