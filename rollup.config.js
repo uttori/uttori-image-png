@@ -10,12 +10,12 @@ import cleanup from 'rollup-plugin-cleanup';
 import replace from '@rollup/plugin-replace';
 
 const config = {
-  input: 'demo/index.js',
+  input: 'src/data-image-png.js',
   output: {
-    file: 'demo/png.js',
-    format: 'es',
+    file: 'browser/data-image-png.js',
+    format: 'iife',
     name: 'ImagePNG',
-    sourcemap: false,
+    sourcemap: true,
   },
   plugins: [
     // Replace zlib with pako for brwosers

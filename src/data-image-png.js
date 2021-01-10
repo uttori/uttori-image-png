@@ -1,12 +1,12 @@
 /* eslint-disable node/no-missing-require */
 /* eslint-disable import/no-unresolved */
 let debug = () => {}; /* istanbul ignore next */ if (process.env.UTTORI_IMAGEPNG_DEBUG) { try { debug = require('debug')('ImagePNG'); } catch {} }
-// const zlib = require('zlib');
-// const pako = require('pako');
-const pako = require('pako/inflate');
+const zlib = require('zlib');
 const DataBuffer = require('@uttori/data-tools/data-buffer');
 const DataBufferList = require('@uttori/data-tools/data-buffer-list');
 const DataStream = require('@uttori/data-tools/data-stream');
+
+// TODO convert to be like AudioWAV with chunks and static methods, merge setters into header chunk maker
 
 /**
  * PNG Decoder
@@ -547,8 +547,7 @@ class ImagePNG extends DataStream {
 
     let out;
     try {
-      // out = zlib.inflateSync(data);
-      out = pako.inflate(data);
+      out = zlib.inflateSync(data);
     } catch (err) {
       /* istanbul ignore next */
       debug('Error Inflating:', err);
