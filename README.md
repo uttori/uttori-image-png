@@ -41,6 +41,21 @@ const pixel = image.getPixel(0, 0);
 
 # API Reference
 
+## Classes
+
+<dl>
+<dt><a href="#ImagePNG">ImagePNG</a></dt>
+<dd><p>PNG Decoder</p>
+</dd>
+</dl>
+
+## Functions
+
+<dl>
+<dt><a href="#debug">debug()</a> : <code>function</code></dt>
+<dd></dd>
+</dl>
+
 <a name="ImagePNG"></a>
 
 ## ImagePNG
@@ -55,6 +70,7 @@ PNG Decoder
 - [Chunk Specifications (LibPNG)](http://www.libpng.org/pub/png/spec/1.2/PNG-Chunks.html)
 - [Chunk Specifications (W3C)](https://www.w3.org/TR/PNG-Chunks.html)
 - [PNGs containing a chunk with length 0xffffffff](http://www.simplesystems.org/libpng/FFFF/)
+- [PNG files can be animated via network latency](https://news.ycombinator.com/item?id=27579759)
 - [TweakPNG](https://github.com/jsummers/tweakpng)
 
 **Properties**
@@ -451,7 +467,7 @@ Creates a new ImagePNG from file data.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>Buffer</code> | The data of the image to process. |
+| data | <code>Array</code> \| <code>ArrayBuffer</code> \| <code>Buffer</code> \| <code>DataBuffer</code> \| <code>Int8Array</code> \| <code>Int16Array</code> \| <code>number</code> \| <code>string</code> \| <code>Uint8Array</code> \| <code>Uint32Array</code> | The data of the image to process. |
 
 <a name="ImagePNG.fromBuffer"></a>
 
@@ -465,6 +481,10 @@ Creates a new ImagePNG from a DataBuffer.
 | --- | --- | --- |
 | buffer | <code>DataBuffer</code> | The DataBuffer of the image to process. |
 
+<a name="debug"></a>
+
+## debug() : <code>function</code>
+**Kind**: global function  
 
 * * *
 
