@@ -1,7 +1,11 @@
 var ImagePNG = (function () {
   'use strict';
 
-  const adler32 = (adler, buf, len, pos) => {
+  var inflate$3 = {};
+
+  var inflate$2 = {};
+
+  const adler32$1 = (adler, buf, len, pos) => {
     let s1 = adler & 0xffff | 0,
         s2 = adler >>> 16 & 0xffff | 0,
         n = 0;
@@ -17,7 +21,7 @@ var ImagePNG = (function () {
     }
     return s1 | s2 << 16 | 0;
   };
-  var adler32_1 = adler32;
+  var adler32_1 = adler32$1;
 
   const makeTable = () => {
     let c,
@@ -32,7 +36,7 @@ var ImagePNG = (function () {
     return table;
   };
   const crcTable = new Uint32Array(makeTable());
-  const crc32 = (crc, buf, len, pos) => {
+  const crc32$1 = (crc, buf, len, pos) => {
     const t = crcTable;
     const end = pos + len;
     crc ^= -1;
@@ -41,10 +45,10 @@ var ImagePNG = (function () {
     }
     return crc ^ -1;
   };
-  var crc32_1 = crc32;
+  var crc32_1 = crc32$1;
 
-  const BAD = 30;
-  const TYPE = 12;
+  const BAD$1 = 30;
+  const TYPE$1 = 12;
   var inffast = function inflate_fast(strm, start) {
     let _in;
     let last;
@@ -148,7 +152,7 @@ var ImagePNG = (function () {
               dist += hold & (1 << op) - 1;
               if (dist > dmax) {
                 strm.msg = 'invalid distance too far back';
-                state.mode = BAD;
+                state.mode = BAD$1;
                 break top;
               }
               hold >>>= op;
@@ -159,7 +163,7 @@ var ImagePNG = (function () {
                 if (op > whave) {
                   if (state.sane) {
                     strm.msg = 'invalid distance too far back';
-                    state.mode = BAD;
+                    state.mode = BAD$1;
                     break top;
                   }
                 }
@@ -238,7 +242,7 @@ var ImagePNG = (function () {
               continue dodist;
             } else {
               strm.msg = 'invalid distance code';
-              state.mode = BAD;
+              state.mode = BAD$1;
               break top;
             }
             break;
@@ -248,11 +252,11 @@ var ImagePNG = (function () {
           hold & (1 << op) - 1)];
           continue dolen;
         } else if (op & 32) {
-          state.mode = TYPE;
+          state.mode = TYPE$1;
           break top;
         } else {
           strm.msg = 'invalid literal/length code';
-          state.mode = BAD;
+          state.mode = BAD$1;
           break top;
         }
         break;
@@ -272,11 +276,11 @@ var ImagePNG = (function () {
   };
 
   const MAXBITS = 15;
-  const ENOUGH_LENS = 852;
-  const ENOUGH_DISTS = 592;
-  const CODES = 0;
-  const LENS = 1;
-  const DISTS = 2;
+  const ENOUGH_LENS$1 = 852;
+  const ENOUGH_DISTS$1 = 592;
+  const CODES$1 = 0;
+  const LENS$1 = 1;
+  const DISTS$1 = 2;
   const lbase = new Uint16Array([
   3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258, 0, 0]);
   const lext = new Uint8Array([
@@ -285,7 +289,7 @@ var ImagePNG = (function () {
   1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577, 0, 0]);
   const dext = new Uint8Array([
   16, 16, 16, 16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 64, 64]);
-  const inflate_table = (type, lens, lens_index, codes, table, table_index, work, opts) => {
+  const inflate_table$1 = (type, lens, lens_index, codes, table, table_index, work, opts) => {
     const bits = opts.bits;
     let len = 0;
     let sym = 0;
@@ -347,7 +351,7 @@ var ImagePNG = (function () {
         return -1;
       }
     }
-    if (left > 0 && (type === CODES || max !== 1)) {
+    if (left > 0 && (type === CODES$1 || max !== 1)) {
       return -1;
     }
     offs[1] = 0;
@@ -359,10 +363,10 @@ var ImagePNG = (function () {
         work[offs[lens[lens_index + sym]]++] = sym;
       }
     }
-    if (type === CODES) {
+    if (type === CODES$1) {
       base = extra = work;
       end = 19;
-    } else if (type === LENS) {
+    } else if (type === LENS$1) {
       base = lbase;
       base_index -= 257;
       extra = lext;
@@ -382,7 +386,7 @@ var ImagePNG = (function () {
     low = -1;
     used = 1 << root;
     mask = used - 1;
-    if (type === LENS && used > ENOUGH_LENS || type === DISTS && used > ENOUGH_DISTS) {
+    if (type === LENS$1 && used > ENOUGH_LENS$1 || type === DISTS$1 && used > ENOUGH_DISTS$1) {
       return 1;
     }
     for (;;) {
@@ -437,7 +441,7 @@ var ImagePNG = (function () {
           left <<= 1;
         }
         used += 1 << curr;
-        if (type === LENS && used > ENOUGH_LENS || type === DISTS && used > ENOUGH_DISTS) {
+        if (type === LENS$1 && used > ENOUGH_LENS$1 || type === DISTS$1 && used > ENOUGH_DISTS$1) {
           return 1;
         }
         low = huff & mask;
@@ -450,7 +454,7 @@ var ImagePNG = (function () {
     opts.bits = root;
     return 0;
   };
-  var inftrees = inflate_table;
+  var inftrees = inflate_table$1;
 
   var constants = {
     Z_NO_FLUSH: 0,
@@ -483,19 +487,23 @@ var ImagePNG = (function () {
     Z_DEFLATED: 8
   };
 
-  const CODES$1 = 0;
-  const LENS$1 = 1;
-  const DISTS$1 = 2;
+  const adler32 = adler32_1;
+  const crc32 = crc32_1;
+  const inflate_fast = inffast;
+  const inflate_table = inftrees;
+  const CODES = 0;
+  const LENS = 1;
+  const DISTS = 2;
   const {
-    Z_FINISH,
+    Z_FINISH: Z_FINISH$1,
     Z_BLOCK,
     Z_TREES,
-    Z_OK,
-    Z_STREAM_END,
-    Z_NEED_DICT,
-    Z_STREAM_ERROR,
-    Z_DATA_ERROR,
-    Z_MEM_ERROR,
+    Z_OK: Z_OK$1,
+    Z_STREAM_END: Z_STREAM_END$1,
+    Z_NEED_DICT: Z_NEED_DICT$1,
+    Z_STREAM_ERROR: Z_STREAM_ERROR$1,
+    Z_DATA_ERROR: Z_DATA_ERROR$1,
+    Z_MEM_ERROR: Z_MEM_ERROR$1,
     Z_BUF_ERROR,
     Z_DEFLATED
   } = constants;
@@ -510,7 +518,7 @@ var ImagePNG = (function () {
   const HCRC = 9;
   const DICTID = 10;
   const DICT = 11;
-  const TYPE$1 = 12;
+  const TYPE = 12;
   const TYPEDO = 13;
   const STORED = 14;
   const COPY_ = 15;
@@ -528,11 +536,11 @@ var ImagePNG = (function () {
   const CHECK = 27;
   const LENGTH = 28;
   const DONE = 29;
-  const BAD$1 = 30;
+  const BAD = 30;
   const MEM = 31;
   const SYNC = 32;
-  const ENOUGH_LENS$1 = 852;
-  const ENOUGH_DISTS$1 = 592;
+  const ENOUGH_LENS = 852;
+  const ENOUGH_DISTS = 592;
   const MAX_WBITS = 15;
   const DEF_WBITS = MAX_WBITS;
   const zswap32 = q => {
@@ -577,7 +585,7 @@ var ImagePNG = (function () {
   }
   const inflateResetKeep = strm => {
     if (!strm || !strm.state) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     const state = strm.state;
     strm.total_in = strm.total_out = state.total = 0;
@@ -593,15 +601,15 @@ var ImagePNG = (function () {
     ;
     state.hold = 0;
     state.bits = 0;
-    state.lencode = state.lendyn = new Int32Array(ENOUGH_LENS$1);
-    state.distcode = state.distdyn = new Int32Array(ENOUGH_DISTS$1);
+    state.lencode = state.lendyn = new Int32Array(ENOUGH_LENS);
+    state.distcode = state.distdyn = new Int32Array(ENOUGH_DISTS);
     state.sane = 1;
     state.back = -1;
-    return Z_OK;
+    return Z_OK$1;
   };
   const inflateReset = strm => {
     if (!strm || !strm.state) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     const state = strm.state;
     state.wsize = 0;
@@ -612,7 +620,7 @@ var ImagePNG = (function () {
   const inflateReset2 = (strm, windowBits) => {
     let wrap;
     if (!strm || !strm.state) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     const state = strm.state;
     if (windowBits < 0) {
@@ -625,7 +633,7 @@ var ImagePNG = (function () {
       }
     }
     if (windowBits && (windowBits < 8 || windowBits > 15)) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     if (state.window !== null && state.wbits !== windowBits) {
       state.window = null;
@@ -636,14 +644,14 @@ var ImagePNG = (function () {
   };
   const inflateInit2 = (strm, windowBits) => {
     if (!strm) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     const state = new InflateState();
     strm.state = state;
     state.window = null
     ;
     const ret = inflateReset2(strm, windowBits);
-    if (ret !== Z_OK) {
+    if (ret !== Z_OK$1) {
       strm.state = null
       ;
     }
@@ -671,14 +679,14 @@ var ImagePNG = (function () {
       while (sym < 288) {
         state.lens[sym++] = 8;
       }
-      inftrees(LENS$1, state.lens, 0, 288, lenfix, 0, state.work, {
+      inflate_table(LENS, state.lens, 0, 288, lenfix, 0, state.work, {
         bits: 9
       });
       sym = 0;
       while (sym < 32) {
         state.lens[sym++] = 5;
       }
-      inftrees(DISTS$1, state.lens, 0, 32, distfix, 0, state.work, {
+      inflate_table(DISTS, state.lens, 0, 32, distfix, 0, state.work, {
         bits: 5
       });
       virgin = false;
@@ -724,7 +732,7 @@ var ImagePNG = (function () {
     }
     return 0;
   };
-  const inflate = (strm, flush) => {
+  const inflate$1 = (strm, flush) => {
     let state;
     let input, output;
     let next;
@@ -747,10 +755,10 @@ var ImagePNG = (function () {
     const order =
     new Uint8Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
     if (!strm || !strm.state || !strm.output || !strm.input && strm.avail_in !== 0) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     state = strm.state;
-    if (state.mode === TYPE$1) {
+    if (state.mode === TYPE) {
       state.mode = TYPEDO;
     }
     put = strm.next_out;
@@ -763,7 +771,7 @@ var ImagePNG = (function () {
     bits = state.bits;
     _in = have;
     _out = left;
-    ret = Z_OK;
+    ret = Z_OK$1;
     inf_leave:
     for (;;) {
       switch (state.mode) {
@@ -785,7 +793,7 @@ var ImagePNG = (function () {
             ;
             hbuf[0] = hold & 0xff;
             hbuf[1] = hold >>> 8 & 0xff;
-            state.check = crc32_1(state.check, hbuf, 2, 0);
+            state.check = crc32(state.check, hbuf, 2, 0);
             hold = 0;
             bits = 0;
             state.mode = FLAGS;
@@ -799,13 +807,13 @@ var ImagePNG = (function () {
           (((hold & 0xff) <<
           8) + (hold >> 8)) % 31) {
             strm.msg = 'incorrect header check';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           if ((hold & 0x0f) !==
           Z_DEFLATED) {
             strm.msg = 'unknown compression method';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           hold >>>= 4;
@@ -816,13 +824,13 @@ var ImagePNG = (function () {
             state.wbits = len;
           } else if (len > state.wbits) {
             strm.msg = 'invalid window size';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.dmax = 1 << state.wbits;
           strm.adler = state.check = 1
           ;
-          state.mode = hold & 0x200 ? DICTID : TYPE$1;
+          state.mode = hold & 0x200 ? DICTID : TYPE;
           hold = 0;
           bits = 0;
           break;
@@ -838,12 +846,12 @@ var ImagePNG = (function () {
           state.flags = hold;
           if ((state.flags & 0xff) !== Z_DEFLATED) {
             strm.msg = 'unknown compression method';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           if (state.flags & 0xe000) {
             strm.msg = 'unknown header flags set';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           if (state.head) {
@@ -852,7 +860,7 @@ var ImagePNG = (function () {
           if (state.flags & 0x0200) {
             hbuf[0] = hold & 0xff;
             hbuf[1] = hold >>> 8 & 0xff;
-            state.check = crc32_1(state.check, hbuf, 2, 0);
+            state.check = crc32(state.check, hbuf, 2, 0);
           }
           hold = 0;
           bits = 0;
@@ -874,7 +882,7 @@ var ImagePNG = (function () {
             hbuf[1] = hold >>> 8 & 0xff;
             hbuf[2] = hold >>> 16 & 0xff;
             hbuf[3] = hold >>> 24 & 0xff;
-            state.check = crc32_1(state.check, hbuf, 4, 0);
+            state.check = crc32(state.check, hbuf, 4, 0);
           }
           hold = 0;
           bits = 0;
@@ -895,7 +903,7 @@ var ImagePNG = (function () {
           if (state.flags & 0x0200) {
             hbuf[0] = hold & 0xff;
             hbuf[1] = hold >>> 8 & 0xff;
-            state.check = crc32_1(state.check, hbuf, 2, 0);
+            state.check = crc32(state.check, hbuf, 2, 0);
           }
           hold = 0;
           bits = 0;
@@ -917,7 +925,7 @@ var ImagePNG = (function () {
             if (state.flags & 0x0200) {
               hbuf[0] = hold & 0xff;
               hbuf[1] = hold >>> 8 & 0xff;
-              state.check = crc32_1(state.check, hbuf, 2, 0);
+              state.check = crc32(state.check, hbuf, 2, 0);
             }
             hold = 0;
             bits = 0;
@@ -943,7 +951,7 @@ var ImagePNG = (function () {
                 len);
               }
               if (state.flags & 0x0200) {
-                state.check = crc32_1(state.check, input, copy, next);
+                state.check = crc32(state.check, input, copy, next);
               }
               have -= copy;
               next += copy;
@@ -969,7 +977,7 @@ var ImagePNG = (function () {
               }
             } while (len && copy < have);
             if (state.flags & 0x0200) {
-              state.check = crc32_1(state.check, input, copy, next);
+              state.check = crc32(state.check, input, copy, next);
             }
             have -= copy;
             next += copy;
@@ -995,7 +1003,7 @@ var ImagePNG = (function () {
               }
             } while (len && copy < have);
             if (state.flags & 0x0200) {
-              state.check = crc32_1(state.check, input, copy, next);
+              state.check = crc32(state.check, input, copy, next);
             }
             have -= copy;
             next += copy;
@@ -1018,7 +1026,7 @@ var ImagePNG = (function () {
             }
             if (hold !== (state.check & 0xffff)) {
               strm.msg = 'header crc mismatch';
-              state.mode = BAD$1;
+              state.mode = BAD;
               break;
             }
             hold = 0;
@@ -1029,7 +1037,7 @@ var ImagePNG = (function () {
             state.head.done = true;
           }
           strm.adler = state.check = 0;
-          state.mode = TYPE$1;
+          state.mode = TYPE;
           break;
         case DICTID:
           while (bits < 32) {
@@ -1052,12 +1060,12 @@ var ImagePNG = (function () {
             strm.avail_in = have;
             state.hold = hold;
             state.bits = bits;
-            return Z_NEED_DICT;
+            return Z_NEED_DICT$1;
           }
           strm.adler = state.check = 1
           ;
-          state.mode = TYPE$1;
-        case TYPE$1:
+          state.mode = TYPE;
+        case TYPE:
           if (flush === Z_BLOCK || flush === Z_TREES) {
             break inf_leave;
           }
@@ -1098,7 +1106,7 @@ var ImagePNG = (function () {
               break;
             case 3:
               strm.msg = 'invalid block type';
-              state.mode = BAD$1;
+              state.mode = BAD;
           }
           hold >>>= 2;
           bits -= 2;
@@ -1116,7 +1124,7 @@ var ImagePNG = (function () {
           }
           if ((hold & 0xffff) !== (hold >>> 16 ^ 0xffff)) {
             strm.msg = 'invalid stored block lengths';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.length = hold & 0xffff;
@@ -1148,7 +1156,7 @@ var ImagePNG = (function () {
             state.length -= copy;
             break;
           }
-          state.mode = TYPE$1;
+          state.mode = TYPE;
           break;
         case TABLE:
           while (bits < 14) {
@@ -1173,7 +1181,7 @@ var ImagePNG = (function () {
           bits -= 4;
           if (state.nlen > 286 || state.ndist > 30) {
             strm.msg = 'too many length or distance symbols';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.have = 0;
@@ -1200,11 +1208,11 @@ var ImagePNG = (function () {
           opts = {
             bits: state.lenbits
           };
-          ret = inftrees(CODES$1, state.lens, 0, 19, state.lencode, 0, state.work, opts);
+          ret = inflate_table(CODES, state.lens, 0, 19, state.lencode, 0, state.work, opts);
           state.lenbits = opts.bits;
           if (ret) {
             strm.msg = 'invalid code lengths set';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.have = 0;
@@ -1245,7 +1253,7 @@ var ImagePNG = (function () {
                 bits -= here_bits;
                 if (state.have === 0) {
                   strm.msg = 'invalid bit length repeat';
-                  state.mode = BAD$1;
+                  state.mode = BAD;
                   break;
                 }
                 len = state.lens[state.have - 1];
@@ -1287,7 +1295,7 @@ var ImagePNG = (function () {
               }
               if (state.have + copy > state.nlen + state.ndist) {
                 strm.msg = 'invalid bit length repeat';
-                state.mode = BAD$1;
+                state.mode = BAD;
                 break;
               }
               while (copy--) {
@@ -1295,23 +1303,23 @@ var ImagePNG = (function () {
               }
             }
           }
-          if (state.mode === BAD$1) {
+          if (state.mode === BAD) {
             break;
           }
           if (state.lens[256] === 0) {
             strm.msg = 'invalid code -- missing end-of-block';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.lenbits = 9;
           opts = {
             bits: state.lenbits
           };
-          ret = inftrees(LENS$1, state.lens, 0, state.nlen, state.lencode, 0, state.work, opts);
+          ret = inflate_table(LENS, state.lens, 0, state.nlen, state.lencode, 0, state.work, opts);
           state.lenbits = opts.bits;
           if (ret) {
             strm.msg = 'invalid literal/lengths set';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.distbits = 6;
@@ -1319,11 +1327,11 @@ var ImagePNG = (function () {
           opts = {
             bits: state.distbits
           };
-          ret = inftrees(DISTS$1, state.lens, state.nlen, state.ndist, state.distcode, 0, state.work, opts);
+          ret = inflate_table(DISTS, state.lens, state.nlen, state.ndist, state.distcode, 0, state.work, opts);
           state.distbits = opts.bits;
           if (ret) {
             strm.msg = 'invalid distances set';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.mode = LEN_;
@@ -1340,7 +1348,7 @@ var ImagePNG = (function () {
             strm.avail_in = have;
             state.hold = hold;
             state.bits = bits;
-            inffast(strm, _out);
+            inflate_fast(strm, _out);
             put = strm.next_out;
             output = strm.output;
             left = strm.avail_out;
@@ -1349,7 +1357,7 @@ var ImagePNG = (function () {
             have = strm.avail_in;
             hold = state.hold;
             bits = state.bits;
-            if (state.mode === TYPE$1) {
+            if (state.mode === TYPE) {
               state.back = -1;
             }
             break;
@@ -1404,12 +1412,12 @@ var ImagePNG = (function () {
           }
           if (here_op & 32) {
             state.back = -1;
-            state.mode = TYPE$1;
+            state.mode = TYPE;
             break;
           }
           if (here_op & 64) {
             strm.msg = 'invalid literal/length code';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.extra = here_op & 15;
@@ -1478,7 +1486,7 @@ var ImagePNG = (function () {
           state.back += here_bits;
           if (here_op & 64) {
             strm.msg = 'invalid distance code';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.offset = here_val;
@@ -1503,7 +1511,7 @@ var ImagePNG = (function () {
           }
           if (state.offset > state.dmax) {
             strm.msg = 'invalid distance too far back';
-            state.mode = BAD$1;
+            state.mode = BAD;
             break;
           }
           state.mode = MATCH;
@@ -1517,7 +1525,7 @@ var ImagePNG = (function () {
             if (copy > state.whave) {
               if (state.sane) {
                 strm.msg = 'invalid distance too far back';
-                state.mode = BAD$1;
+                state.mode = BAD;
                 break;
               }
             }
@@ -1571,12 +1579,12 @@ var ImagePNG = (function () {
             state.total += _out;
             if (_out) {
               strm.adler = state.check =
-              state.flags ? crc32_1(state.check, output, _out, put - _out) : adler32_1(state.check, output, _out, put - _out);
+              state.flags ? crc32(state.check, output, _out, put - _out) : adler32(state.check, output, _out, put - _out);
             }
             _out = left;
             if ((state.flags ? hold : zswap32(hold)) !== state.check) {
               strm.msg = 'incorrect data check';
-              state.mode = BAD$1;
+              state.mode = BAD;
               break;
             }
             hold = 0;
@@ -1595,7 +1603,7 @@ var ImagePNG = (function () {
             }
             if (hold !== (state.total & 0xffffffff)) {
               strm.msg = 'incorrect length check';
-              state.mode = BAD$1;
+              state.mode = BAD;
               break;
             }
             hold = 0;
@@ -1603,16 +1611,16 @@ var ImagePNG = (function () {
           }
           state.mode = DONE;
         case DONE:
-          ret = Z_STREAM_END;
+          ret = Z_STREAM_END$1;
           break inf_leave;
-        case BAD$1:
-          ret = Z_DATA_ERROR;
+        case BAD:
+          ret = Z_DATA_ERROR$1;
           break inf_leave;
         case MEM:
-          return Z_MEM_ERROR;
+          return Z_MEM_ERROR$1;
         case SYNC:
         default:
-          return Z_STREAM_ERROR;
+          return Z_STREAM_ERROR$1;
       }
     }
     strm.next_out = put;
@@ -1621,7 +1629,7 @@ var ImagePNG = (function () {
     strm.avail_in = have;
     state.hold = hold;
     state.bits = bits;
-    if (state.wsize || _out !== strm.avail_out && state.mode < BAD$1 && (state.mode < CHECK || flush !== Z_FINISH)) {
+    if (state.wsize || _out !== strm.avail_out && state.mode < BAD && (state.mode < CHECK || flush !== Z_FINISH$1)) {
       if (updatewindow(strm, strm.output, strm.next_out, _out - strm.avail_out)) ;
     }
     _in -= strm.avail_in;
@@ -1631,10 +1639,10 @@ var ImagePNG = (function () {
     state.total += _out;
     if (state.wrap && _out) {
       strm.adler = state.check =
-      state.flags ? crc32_1(state.check, output, _out, strm.next_out - _out) : adler32_1(state.check, output, _out, strm.next_out - _out);
+      state.flags ? crc32(state.check, output, _out, strm.next_out - _out) : adler32(state.check, output, _out, strm.next_out - _out);
     }
-    strm.data_type = state.bits + (state.last ? 64 : 0) + (state.mode === TYPE$1 ? 128 : 0) + (state.mode === LEN_ || state.mode === COPY_ ? 256 : 0);
-    if ((_in === 0 && _out === 0 || flush === Z_FINISH) && ret === Z_OK) {
+    strm.data_type = state.bits + (state.last ? 64 : 0) + (state.mode === TYPE ? 128 : 0) + (state.mode === LEN_ || state.mode === COPY_ ? 256 : 0);
+    if ((_in === 0 && _out === 0 || flush === Z_FINISH$1) && ret === Z_OK$1) {
       ret = Z_BUF_ERROR;
     }
     return ret;
@@ -1642,26 +1650,26 @@ var ImagePNG = (function () {
   const inflateEnd = strm => {
     if (!strm || !strm.state
     ) {
-        return Z_STREAM_ERROR;
+        return Z_STREAM_ERROR$1;
       }
     let state = strm.state;
     if (state.window) {
       state.window = null;
     }
     strm.state = null;
-    return Z_OK;
+    return Z_OK$1;
   };
   const inflateGetHeader = (strm, head) => {
     if (!strm || !strm.state) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     const state = strm.state;
     if ((state.wrap & 2) === 0) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     state.head = head;
     head.done = false;
-    return Z_OK;
+    return Z_OK$1;
   };
   const inflateSetDictionary = (strm, dictionary) => {
     const dictLength = dictionary.length;
@@ -1671,54 +1679,44 @@ var ImagePNG = (function () {
     if (!strm
     || !strm.state
     ) {
-        return Z_STREAM_ERROR;
+        return Z_STREAM_ERROR$1;
       }
     state = strm.state;
     if (state.wrap !== 0 && state.mode !== DICT) {
-      return Z_STREAM_ERROR;
+      return Z_STREAM_ERROR$1;
     }
     if (state.mode === DICT) {
       dictid = 1;
-      dictid = adler32_1(dictid, dictionary, dictLength, 0);
+      dictid = adler32(dictid, dictionary, dictLength, 0);
       if (dictid !== state.check) {
-        return Z_DATA_ERROR;
+        return Z_DATA_ERROR$1;
       }
     }
     ret = updatewindow(strm, dictionary, dictLength, dictLength);
     if (ret) {
       state.mode = MEM;
-      return Z_MEM_ERROR;
+      return Z_MEM_ERROR$1;
     }
     state.havedict = 1;
-    return Z_OK;
+    return Z_OK$1;
   };
-  var inflateReset_1 = inflateReset;
-  var inflateReset2_1 = inflateReset2;
-  var inflateResetKeep_1 = inflateResetKeep;
-  var inflateInit_1 = inflateInit;
-  var inflateInit2_1 = inflateInit2;
-  var inflate_2 = inflate;
-  var inflateEnd_1 = inflateEnd;
-  var inflateGetHeader_1 = inflateGetHeader;
-  var inflateSetDictionary_1 = inflateSetDictionary;
-  var inflateInfo = 'pako inflate (from Nodeca project)';
-  var inflate_1 = {
-    inflateReset: inflateReset_1,
-    inflateReset2: inflateReset2_1,
-    inflateResetKeep: inflateResetKeep_1,
-    inflateInit: inflateInit_1,
-    inflateInit2: inflateInit2_1,
-    inflate: inflate_2,
-    inflateEnd: inflateEnd_1,
-    inflateGetHeader: inflateGetHeader_1,
-    inflateSetDictionary: inflateSetDictionary_1,
-    inflateInfo: inflateInfo
-  };
+  inflate$2.inflateReset = inflateReset;
+  inflate$2.inflateReset2 = inflateReset2;
+  inflate$2.inflateResetKeep = inflateResetKeep;
+  inflate$2.inflateInit = inflateInit;
+  inflate$2.inflateInit2 = inflateInit2;
+  inflate$2.inflate = inflate$1;
+  inflate$2.inflateEnd = inflateEnd;
+  inflate$2.inflateGetHeader = inflateGetHeader;
+  inflate$2.inflateSetDictionary = inflateSetDictionary;
+  inflate$2.inflateInfo = 'pako inflate (from Nodeca project)';
+
+  var common = {};
 
   const _has = (obj, key) => {
     return Object.prototype.hasOwnProperty.call(obj, key);
   };
-  var assign = function (obj
+  common.assign = function (obj
   ) {
     const sources = Array.prototype.slice.call(arguments, 1);
     while (sources.length) {
@@ -1737,7 +1735,7 @@ var ImagePNG = (function () {
     }
     return obj;
   };
-  var flattenChunks = chunks => {
+  common.flattenChunks = chunks => {
     let len = 0;
     for (let i = 0, l = chunks.length; i < l; i++) {
       len += chunks[i].length;
@@ -1750,10 +1748,8 @@ var ImagePNG = (function () {
     }
     return result;
   };
-  var common = {
-    assign: assign,
-    flattenChunks: flattenChunks
-  };
+
+  var strings$1 = {};
 
   let STR_APPLY_UIA_OK = true;
   try {
@@ -1766,7 +1762,7 @@ var ImagePNG = (function () {
     _utf8len[q] = q >= 252 ? 6 : q >= 248 ? 5 : q >= 240 ? 4 : q >= 224 ? 3 : q >= 192 ? 2 : 1;
   }
   _utf8len[254] = _utf8len[254] = 1;
-  var string2buf = str => {
+  strings$1.string2buf = str => {
     let buf,
         c,
         c2,
@@ -1825,7 +1821,7 @@ var ImagePNG = (function () {
     }
     return result;
   };
-  var buf2string = (buf, max) => {
+  strings$1.buf2string = (buf, max) => {
     let i, out;
     const len = max || buf.length;
     const utf16buf = new Array(len * 2);
@@ -1860,7 +1856,7 @@ var ImagePNG = (function () {
     }
     return buf2binstring(utf16buf, out);
   };
-  var utf8border = (buf, max) => {
+  strings$1.utf8border = (buf, max) => {
     max = max || buf.length;
     if (max > buf.length) {
       max = buf.length;
@@ -1877,11 +1873,6 @@ var ImagePNG = (function () {
     }
     return pos + _utf8len[buf[pos]] > max ? pos : max;
   };
-  var strings = {
-    string2buf: string2buf,
-    buf2string: buf2string,
-    utf8border: utf8border
-  };
 
   var messages = {
     2: 'need dictionary',
@@ -1895,7 +1886,7 @@ var ImagePNG = (function () {
     '-6': 'incompatible version'
   };
 
-  function ZStream() {
+  function ZStream$1() {
     this.input = null;
     this.next_in = 0;
     this.avail_in = 0;
@@ -1911,9 +1902,9 @@ var ImagePNG = (function () {
     ;
     this.adler = 0;
   }
-  var zstream = ZStream;
+  var zstream = ZStream$1;
 
-  function GZheader() {
+  function GZheader$1() {
     this.text = 0;
     this.time = 0;
     this.xflags = 0;
@@ -1925,21 +1916,27 @@ var ImagePNG = (function () {
     this.hcrc = 0;
     this.done = false;
   }
-  var gzheader = GZheader;
+  var gzheader = GZheader$1;
 
+  const zlib_inflate = inflate$2;
+  const utils = common;
+  const strings = strings$1;
+  const msg = messages;
+  const ZStream = zstream;
+  const GZheader = gzheader;
   const toString = Object.prototype.toString;
   const {
     Z_NO_FLUSH,
-    Z_FINISH: Z_FINISH$1,
-    Z_OK: Z_OK$1,
-    Z_STREAM_END: Z_STREAM_END$1,
-    Z_NEED_DICT: Z_NEED_DICT$1,
-    Z_STREAM_ERROR: Z_STREAM_ERROR$1,
-    Z_DATA_ERROR: Z_DATA_ERROR$1,
-    Z_MEM_ERROR: Z_MEM_ERROR$1
+    Z_FINISH,
+    Z_OK,
+    Z_STREAM_END,
+    Z_NEED_DICT,
+    Z_STREAM_ERROR,
+    Z_DATA_ERROR,
+    Z_MEM_ERROR
   } = constants;
   function Inflate(options) {
-    this.options = common.assign({
+    this.options = utils.assign({
       chunkSize: 1024 * 64,
       windowBits: 15,
       to: ''
@@ -1963,14 +1960,14 @@ var ImagePNG = (function () {
     this.msg = '';
     this.ended = false;
     this.chunks = [];
-    this.strm = new zstream();
+    this.strm = new ZStream();
     this.strm.avail_out = 0;
-    let status = inflate_1.inflateInit2(this.strm, opt.windowBits);
-    if (status !== Z_OK$1) {
-      throw new Error(messages[status]);
+    let status = zlib_inflate.inflateInit2(this.strm, opt.windowBits);
+    if (status !== Z_OK) {
+      throw new Error(msg[status]);
     }
-    this.header = new gzheader();
-    inflate_1.inflateGetHeader(this.strm, this.header);
+    this.header = new GZheader();
+    zlib_inflate.inflateGetHeader(this.strm, this.header);
     if (opt.dictionary) {
       if (typeof opt.dictionary === 'string') {
         opt.dictionary = strings.string2buf(opt.dictionary);
@@ -1978,9 +1975,9 @@ var ImagePNG = (function () {
         opt.dictionary = new Uint8Array(opt.dictionary);
       }
       if (opt.raw) {
-        status = inflate_1.inflateSetDictionary(this.strm, opt.dictionary);
-        if (status !== Z_OK$1) {
-          throw new Error(messages[status]);
+        status = zlib_inflate.inflateSetDictionary(this.strm, opt.dictionary);
+        if (status !== Z_OK) {
+          throw new Error(msg[status]);
         }
       }
     }
@@ -1991,7 +1988,7 @@ var ImagePNG = (function () {
     const dictionary = this.options.dictionary;
     let status, _flush_mode, last_avail_out;
     if (this.ended) return false;
-    if (flush_mode === ~~flush_mode) _flush_mode = flush_mode;else _flush_mode = flush_mode === true ? Z_FINISH$1 : Z_NO_FLUSH;
+    if (flush_mode === ~~flush_mode) _flush_mode = flush_mode;else _flush_mode = flush_mode === true ? Z_FINISH : Z_NO_FLUSH;
     if (toString.call(data) === '[object ArrayBuffer]') {
       strm.input = new Uint8Array(data);
     } else {
@@ -2005,31 +2002,31 @@ var ImagePNG = (function () {
         strm.next_out = 0;
         strm.avail_out = chunkSize;
       }
-      status = inflate_1.inflate(strm, _flush_mode);
-      if (status === Z_NEED_DICT$1 && dictionary) {
-        status = inflate_1.inflateSetDictionary(strm, dictionary);
-        if (status === Z_OK$1) {
-          status = inflate_1.inflate(strm, _flush_mode);
-        } else if (status === Z_DATA_ERROR$1) {
-          status = Z_NEED_DICT$1;
+      status = zlib_inflate.inflate(strm, _flush_mode);
+      if (status === Z_NEED_DICT && dictionary) {
+        status = zlib_inflate.inflateSetDictionary(strm, dictionary);
+        if (status === Z_OK) {
+          status = zlib_inflate.inflate(strm, _flush_mode);
+        } else if (status === Z_DATA_ERROR) {
+          status = Z_NEED_DICT;
         }
       }
-      while (strm.avail_in > 0 && status === Z_STREAM_END$1 && strm.state.wrap > 0 && data[strm.next_in] !== 0) {
-        inflate_1.inflateReset(strm);
-        status = inflate_1.inflate(strm, _flush_mode);
+      while (strm.avail_in > 0 && status === Z_STREAM_END && strm.state.wrap > 0 && data[strm.next_in] !== 0) {
+        zlib_inflate.inflateReset(strm);
+        status = zlib_inflate.inflate(strm, _flush_mode);
       }
       switch (status) {
-        case Z_STREAM_ERROR$1:
-        case Z_DATA_ERROR$1:
-        case Z_NEED_DICT$1:
-        case Z_MEM_ERROR$1:
+        case Z_STREAM_ERROR:
+        case Z_DATA_ERROR:
+        case Z_NEED_DICT:
+        case Z_MEM_ERROR:
           this.onEnd(status);
           this.ended = true;
           return false;
       }
       last_avail_out = strm.avail_out;
       if (strm.next_out) {
-        if (strm.avail_out === 0 || status === Z_STREAM_END$1) {
+        if (strm.avail_out === 0 || status === Z_STREAM_END) {
           if (this.options.to === 'string') {
             let next_out_utf8 = strings.utf8border(strm.output, strm.next_out);
             let tail = strm.next_out - next_out_utf8;
@@ -2043,9 +2040,9 @@ var ImagePNG = (function () {
           }
         }
       }
-      if (status === Z_OK$1 && last_avail_out === 0) continue;
-      if (status === Z_STREAM_END$1) {
-        status = inflate_1.inflateEnd(this.strm);
+      if (status === Z_OK && last_avail_out === 0) continue;
+      if (status === Z_STREAM_END) {
+        status = zlib_inflate.inflateEnd(this.strm);
         this.onEnd(status);
         this.ended = true;
         return true;
@@ -2058,48 +2055,44 @@ var ImagePNG = (function () {
     this.chunks.push(chunk);
   };
   Inflate.prototype.onEnd = function (status) {
-    if (status === Z_OK$1) {
+    if (status === Z_OK) {
       if (this.options.to === 'string') {
         this.result = this.chunks.join('');
       } else {
-        this.result = common.flattenChunks(this.chunks);
+        this.result = utils.flattenChunks(this.chunks);
       }
     }
     this.chunks = [];
     this.err = status;
     this.msg = this.strm.msg;
   };
-  function inflate$1(input, options) {
+  function inflate(input, options) {
     const inflator = new Inflate(options);
     inflator.push(input);
-    if (inflator.err) throw inflator.msg || messages[inflator.err];
+    if (inflator.err) throw inflator.msg || msg[inflator.err];
     return inflator.result;
   }
   function inflateRaw(input, options) {
     options = options || {};
     options.raw = true;
-    return inflate$1(input, options);
+    return inflate(input, options);
   }
-  var Inflate_1 = Inflate;
-  var inflate_2$1 = inflate$1;
-  var inflateRaw_1 = inflateRaw;
-  var ungzip = inflate$1;
-  var constants$1 = constants;
-  var inflate_1$1 = {
-    Inflate: Inflate_1,
-    inflate: inflate_2$1,
-    inflateRaw: inflateRaw_1,
-    ungzip: ungzip,
-    constants: constants$1
-  };
+  inflate$3.Inflate = Inflate;
+  inflate$3.inflate = inflate;
+  inflate$3.inflateRaw = inflateRaw;
+  inflate$3.ungzip = inflate;
+  inflate$3.constants = constants;
 
-  class DataBuffer {
+  class DataBuffer$2 {
     constructor(input) {
       if (!input) {
         const error = 'Missing input data.';
         throw new TypeError(error);
       }
-      if (typeof Buffer !== 'undefined' && (Buffer.isBuffer(input) || typeof input === 'string')) {
+      this.data = null;
+      if (typeof Buffer !== 'undefined' && Buffer.isBuffer(input)) {
+        this.data = Buffer.from(input);
+      } else if (typeof input === 'string') {
         this.data = Buffer.from(input);
       } else if (input instanceof Uint8Array) {
         this.data = input;
@@ -2109,9 +2102,9 @@ var ImagePNG = (function () {
         this.data = new Uint8Array(input);
       } else if (typeof input === 'number') {
         this.data = new Uint8Array(input);
-      } else if (input instanceof DataBuffer) {
+      } else if (input instanceof DataBuffer$2) {
         this.data = input.data;
-      } else if (input.buffer instanceof ArrayBuffer) {
+      } else if (input.buffer && input.buffer instanceof ArrayBuffer) {
         this.data = new Uint8Array(input.buffer, input.byteOffset, input.length * input.BYTES_PER_ELEMENT);
       } else {
         const error = `Unknown type of input for DataBuffer: ${typeof input}`;
@@ -2122,10 +2115,10 @@ var ImagePNG = (function () {
       this.prev = null;
     }
     static allocate(size) {
-      return new DataBuffer(size);
+      return new DataBuffer$2(size);
     }
     compare(input, offset = 0) {
-      const buffer = new DataBuffer(input);
+      const buffer = new DataBuffer$2(input);
       const {
         length
       } = buffer;
@@ -2133,36 +2126,44 @@ var ImagePNG = (function () {
         return false;
       }
       const local = this.slice(offset, length);
+      const {
+        data
+      } = buffer;
       for (let i = 0; i < length; i++) {
-        if (local.data[i] !== buffer.data[i]) {
+        if (local.data[i] !== data[i]) {
           return false;
         }
       }
       return true;
     }
     copy() {
-      return new DataBuffer(new Uint8Array(this.data));
+      return new DataBuffer$2(new Uint8Array(this.data));
     }
     slice(position, length = this.length) {
       if (position === 0 && length >= this.length) {
-        return new DataBuffer(this.data);
+        return new DataBuffer$2(this.data);
       }
-      return new DataBuffer(this.data.subarray(position, position + length));
+      return new DataBuffer$2(this.data.subarray(position, position + length));
     }
   }
-  var dataBuffer = DataBuffer;
+  var dataBuffer = DataBuffer$2;
 
-  let debug = () => {};
-  class DataBufferList {
-    constructor() {
+  let debug$2 = () => {};
+  class DataBufferList$2 {
+    constructor(buffers) {
       this.first = null;
       this.last = null;
       this.totalBuffers = 0;
       this.availableBytes = 0;
       this.availableBuffers = 0;
+      if (buffers && Array.isArray(buffers)) {
+        for (const buffer of buffers) {
+          this.append(buffer);
+        }
+      }
     }
     copy() {
-      const result = new DataBufferList();
+      const result = new DataBufferList$2();
       result.first = this.first;
       result.last = this.last;
       result.totalBuffers = this.totalBuffers;
@@ -2182,7 +2183,7 @@ var ImagePNG = (function () {
       this.availableBytes += buffer.length;
       this.availableBuffers++;
       this.totalBuffers++;
-      debug('append:', this.totalBuffers);
+      debug$2('append:', this.totalBuffers);
       return this.totalBuffers;
     }
     moreAvailable() {
@@ -2220,9 +2221,11 @@ var ImagePNG = (function () {
       }
     }
   }
-  var dataBufferList = DataBufferList;
+  var dataBufferList = DataBufferList$2;
 
   let debug$1 = () => {};
+  const DataBuffer$1 = dataBuffer;
+  const DataBufferList$1 = dataBufferList;
   class UnderflowError extends Error {
     constructor(message) {
       super(message);
@@ -2233,7 +2236,7 @@ var ImagePNG = (function () {
       }
     }
   }
-  class DataStream {
+  class DataStream$1 {
     constructor(list, options = {}) {
       options.size = options.size || 16;
       if (options && options.size % 8 !== 0) {
@@ -2257,17 +2260,17 @@ var ImagePNG = (function () {
       this.offset = 0;
     }
     static fromData(data) {
-      const buffer = new dataBuffer(data);
-      const list = new dataBufferList();
+      const buffer = new DataBuffer$1(data);
+      const list = new DataBufferList$1();
       list.append(buffer);
-      return new DataStream(list, {
+      return new DataStream$1(list, {
         size: buffer.length
       });
     }
     static fromBuffer(buffer) {
-      const list = new dataBufferList();
+      const list = new DataBufferList$1();
       list.append(buffer);
-      return new DataStream(list, {
+      return new DataStream$1(list, {
         size: buffer.length
       });
     }
@@ -2313,7 +2316,7 @@ var ImagePNG = (function () {
       return true;
     }
     copy() {
-      const result = new DataStream(this.list.copy(), {
+      const result = new DataStream$1(this.list.copy(), {
         size: this.size
       });
       result.localOffset = this.localOffset;
@@ -2522,7 +2525,7 @@ var ImagePNG = (function () {
       return this.float80();
     }
     readBuffer(length) {
-      const result = dataBuffer.allocate(length);
+      const result = DataBuffer$1.allocate(length);
       const to = result.data;
       for (let i = 0; i < length; i++) {
         to[i] = this.readUInt8();
@@ -2530,7 +2533,7 @@ var ImagePNG = (function () {
       return result;
     }
     peekBuffer(offset, length) {
-      const result = dataBuffer.allocate(length);
+      const result = DataBuffer$1.allocate(length);
       const to = result.data;
       for (let i = 0; i < length; i++) {
         to[i] = this.peekUInt8(offset + i);
@@ -2712,10 +2715,14 @@ var ImagePNG = (function () {
       return result;
     }
   }
-  var dataStream = DataStream;
+  var dataStream = DataStream$1;
 
-  let debug$2 = () => {};
-  class ImagePNG extends dataStream {
+  let debug = () => {};
+  const pako = inflate$3;
+  const DataBuffer = dataBuffer;
+  const DataBufferList = dataBufferList;
+  const DataStream = dataStream;
+  class ImagePNG extends DataStream {
     constructor(list, overrides = {}) {
       const options = {
         size: 16,
@@ -2743,17 +2750,17 @@ var ImagePNG = (function () {
       this.parse();
     }
     static fromFile(data) {
-      debug$2('fromFile:', data.length);
-      const buffer = new dataBuffer(data);
-      const list = new dataBufferList();
+      debug('fromFile:', data.length, data.byteLength);
+      const buffer = new DataBuffer(data);
+      const list = new DataBufferList();
       list.append(buffer);
       return new ImagePNG(list, {
         size: buffer.length
       });
     }
     static fromBuffer(buffer) {
-      debug$2('fromBuffer:', buffer.length);
-      const list = new dataBufferList();
+      debug('fromBuffer:', buffer.length);
+      const list = new DataBufferList();
       list.append(buffer);
       return new ImagePNG(list, {
         size: buffer.length
@@ -2833,7 +2840,7 @@ var ImagePNG = (function () {
       if (!Number.isInteger(y) || y >= this.height || y < 0) {
         throw new Error(`y position out of bounds or invalid: ${y}`);
       }
-      debug$2('getPixel x:', x, 'y:', y, 'colorType:', this.colorType, 'colors:', this.colors, 'bitDepth:', this.bitDepth);
+      debug('getPixel x:', x, 'y:', y, 'colorType:', this.colorType, 'colors:', this.colors, 'bitDepth:', this.bitDepth);
       const i = this.colors * this.bitDepth / 8 * (y * this.width + x);
       switch (this.colorType) {
         case 0:
@@ -2877,16 +2884,16 @@ var ImagePNG = (function () {
       while (this.remainingBytes()) {
         const type = this.decodeChunk();
         if (type === 'IEND') {
-          const leftover = this.remainingBytes();
+          this.remainingBytes();
           break;
         }
       }
     }
     decodeHeader() {
-      debug$2('decodeHeader: offset =', this.offset);
+      debug('decodeHeader: offset =', this.offset);
       if (this.offset !== 0) ;
       const header = this.read(8, this.nativeEndian);
-      const header_buffer = new dataBuffer(header);
+      const header_buffer = new DataBuffer(header);
       if (!header_buffer.compare([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])) {
         throw new Error('Missing or invalid PNG header.');
       }
@@ -2900,7 +2907,7 @@ var ImagePNG = (function () {
       const type = this.readString(4);
       const chunk = this.read(length, this.nativeEndian);
       const crc = this.readUInt32();
-      debug$2('decodeChunk type', type, 'chunk size', length, 'crc', crc.toString(16).toUpperCase());
+      debug('decodeChunk type', type, 'chunk size', length, 'crc', crc.toString(16).toUpperCase());
       switch (type) {
         case 'IHDR':
           this.decodeIHDR(chunk);
@@ -2924,7 +2931,7 @@ var ImagePNG = (function () {
       return type;
     }
     decodeIHDR(chunk) {
-      const header = dataStream.fromData(chunk);
+      const header = DataStream.fromData(chunk);
       const width = header.readUInt32();
       const height = header.readUInt32();
       const bit_depth = header.readUInt8();
@@ -2939,7 +2946,7 @@ var ImagePNG = (function () {
       this.setCompressionMethod(compression_method);
       this.setFilterMethod(filter_method);
       this.setInterlaceMethod(interlace_method);
-      debug$2('decodeIHDR =', JSON.stringify({
+      debug('decodeIHDR =', JSON.stringify({
         width,
         height,
         bit_depth,
@@ -2953,7 +2960,7 @@ var ImagePNG = (function () {
       this.setPalette(chunk);
     }
     decodeIDAT(chunk) {
-      debug$2('decodeIDAT:', chunk.length);
+      debug('decodeIDAT:', chunk.length);
       this.dataChunks.push(chunk);
     }
     decodeTRNS(chunk) {
@@ -2961,7 +2968,7 @@ var ImagePNG = (function () {
     }
     decodePHYS(chunk) {
       const INCH_TO_METERS = 0.0254;
-      const buffer = dataStream.fromData(chunk);
+      const buffer = DataStream.fromData(chunk);
       let width = buffer.readUInt32();
       let height = buffer.readUInt32();
       const unit = buffer.readUInt8();
@@ -2995,11 +3002,11 @@ var ImagePNG = (function () {
       }
       let out;
       try {
-        out = inflate_1$1.inflate(data);
+        out = pako.inflate(data);
       } catch (err) {
         throw err;
       }
-      debug$2('Inflated Size:', out.length);
+      debug('Inflated Size:', out.length);
       try {
         if (this.interlaceMethod === 0) {
           this.interlaceNone(out);
@@ -3014,8 +3021,8 @@ var ImagePNG = (function () {
       const bytes_per_pixel = Math.max(1, this.colors * this.bitDepth / 8);
       const color_bytes_per_row = bytes_per_pixel * this.width;
       this.pixels = new Uint8Array(bytes_per_pixel * this.width * this.height);
-      const chunk = dataStream.fromData(data);
-      debug$2('interlaceNone: bytes:', chunk.remainingBytes());
+      const chunk = DataStream.fromData(data);
+      debug('interlaceNone: bytes:', chunk.remainingBytes());
       let offset = 0;
       while (chunk.remainingBytes() > 0) {
         const type = chunk.readUInt8();

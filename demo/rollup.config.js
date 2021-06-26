@@ -21,7 +21,7 @@ const config = {
     // Replace zlib with pako for brwosers
     replace({
       "const zlib = require('zlib');": "const pako = require('pako/lib/inflate.js');",
-      'out = zlib.inflateSync(data);': 'out = pako.inflate(data);',
+      'zlib.inflateSync(': 'pako.inflate(',
       delimiters: ['', ''],
     }),
     nodeResolve({

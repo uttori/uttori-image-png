@@ -1,10 +1,12 @@
+declare module '@uttori/image-png';
+
 declare module "data-image-png" {
     export = ImagePNG;
     class ImagePNG {
-        static fromFile(data: Buffer): ImagePNG;
+        static fromFile(data: any[] | ArrayBuffer | Buffer | any | Int8Array | Int16Array | number | string | Uint8Array | Uint32Array): ImagePNG;
         static fromBuffer(buffer: any): ImagePNG;
         constructor(list: any, overrides?: {
-            size: number;
+            size?: number;
         });
         width: number;
         height: number;

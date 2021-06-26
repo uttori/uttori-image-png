@@ -36,20 +36,29 @@ test('Tree Shaking: { DataBuffer, DataBufferList, DataStream }', async (t) => {
     format: 'es',
   });
 
-  // Sum should be (1 (input) + 3 (data tools) + 16 pako files) number of expected modules
+  // Pako Version sum should be (1 (input) + 3 (data tools) + 16 pako files) number of expected modules
+  // t.deepEqual(Object.keys(output.output[0].modules).map((f) => path.basename(f)), [
+  //   'adler32.js',
+  //   'crc32.js',
+  //   'inffast.js',
+  //   'inftrees.js',
+  //   'constants.js',
+  //   'inflate.js',
+  //   'common.js',
+  //   'strings.js',
+  //   'messages.js',
+  //   'zstream.js',
+  //   'gzheader.js',
+  //   'inflate.js',
+  //   'data-buffer.js',
+  //   'data-buffer-list.js',
+  //   'data-stream.js',
+  //   'data-image-png.js',
+  //   'shake-me.mjs',
+  // ]);
+
+  // Zlib sum should be (1 (input) + 3 (data tools) + 1 shake-me) number of expected modules
   t.deepEqual(Object.keys(output.output[0].modules).map((f) => path.basename(f)), [
-    'adler32.js',
-    'crc32.js',
-    'inffast.js',
-    'inftrees.js',
-    'constants.js',
-    'inflate.js',
-    'common.js',
-    'strings.js',
-    'messages.js',
-    'zstream.js',
-    'gzheader.js',
-    'inflate.js',
     'data-buffer.js',
     'data-buffer-list.js',
     'data-stream.js',

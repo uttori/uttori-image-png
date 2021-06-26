@@ -1,12 +1,11 @@
 /* eslint-disable node/no-missing-require */
 /* eslint-disable import/no-unresolved */
+/** @type {Function} */
 let debug = () => {}; /* istanbul ignore next */ if (process.env.UTTORI_IMAGEPNG_DEBUG) { try { debug = require('debug')('ImagePNG'); } catch {} }
 const zlib = require('zlib');
 const DataBuffer = require('@uttori/data-tools/data-buffer');
 const DataBufferList = require('@uttori/data-tools/data-buffer-list');
 const DataStream = require('@uttori/data-tools/data-stream');
-
-// TODO convert to be like AudioWAV with chunks and static methods, merge setters into header chunk maker
 
 /**
  * PNG Decoder
@@ -35,6 +34,7 @@ const DataStream = require('@uttori/data-tools/data-stream');
  * @see {@link http://www.libpng.org/pub/png/spec/1.2/PNG-Chunks.html|Chunk Specifications (LibPNG)}
  * @see {@link https://www.w3.org/TR/PNG-Chunks.html|Chunk Specifications (W3C)}
  * @see {@link http://www.simplesystems.org/libpng/FFFF/|PNGs containing a chunk with length 0xffffffff}
+ * @see {@link https://news.ycombinator.com/item?id=27579759|PNG files can be animated via network latency}
  * @see {@link https://github.com/jsummers/tweakpng|TweakPNG}
  * @example <caption>new ImagePNG(list, options)</caption>
  * const image_data = await FileUtility.readFile('./test/assets/PngSuite', 'oi1n0g16', 'png', null);
@@ -92,12 +92,12 @@ class ImagePNG extends DataStream {
   /**
    * Creates a new ImagePNG from file data.
    *
-   * @param {Buffer} data - The data of the image to process.
+   * @param {Array|ArrayBuffer|Buffer|DataBuffer|Int8Array|Int16Array|number|string|Uint8Array|Uint32Array} data - The data of the image to process.
    * @returns {ImagePNG} the new ImagePNG instance for the provided file data
    * @static
    */
   static fromFile(data) {
-    debug('fromFile:', data.length);
+    debug('fromFile:', data.length, data.byteLength);
     const buffer = new DataBuffer(data);
     const list = new DataBufferList();
     list.append(buffer);
@@ -379,14 +379,14 @@ class ImagePNG extends DataStream {
       case 'IEND': this.decodeIEND(chunk); break;
       case 'tRNS': this.decodeTRNS(chunk); break;
       case 'pHYs': this.decodePHYS(chunk); break;
-      // case 'cHRM': this.decodeCHRM(chunk); break;
-      // case 'gAMA': this.decodeGAMA(chunk); break;
-      // case 'bKGD': this.decodeBKGD(chunk); break;
-      // case 'tIME': this.decodeTIME(chunk); break;
-      // case 'tEXt': this.decodeTEXT(chunk); break;
-      // case 'iTXt': this.decodeITXT(chunk); break;
-      // case 'sRGB': this.decodeSRGB(chunk); break;
-      // case 'sBIT': this.decodeSBIT(chunk); break;
+      // case 'cHRM': decodeCHRM(chunk); break;
+      // case 'gAMA': decodeGAMA(chunk); break;
+      // case 'bKGD': decodeBKGD(chunk); break;
+      // case 'tIME': decodeTIME(chunk); break;
+      // case 'tEXt': decodeTEXT(chunk); break;
+      // case 'iTXt': decodeITXT(chunk); break;
+      // case 'sRGB': decodeSRGB(chunk); break;
+      // case 'sBIT': decodeSBIT(chunk); break;
       default:
         debug(`Unsupported Chunk: '${type}'`);
         break;
@@ -534,7 +534,6 @@ class ImagePNG extends DataStream {
     if (this.dataChunks.length === 0) {
       throw new Error('No IDAT chunks to decode.');
     }
-    // eslint-disable-next-line unicorn/no-array-reduce
     const length = this.dataChunks.reduce((accumulator, chunk) => accumulator + chunk.length, 0);
     debug('Data Chunks Total Size:', length);
     const data = new Uint8Array(length);
