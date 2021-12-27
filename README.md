@@ -101,6 +101,24 @@ PNG Decoder
 * [ImagePNG](#ImagePNG) ⇐ <code>DataBuffer</code>
     * [new ImagePNG(input)](#new_ImagePNG_new)
     * _instance_
+        * [.width](#ImagePNG+width) : <code>number</code>
+        * [.height](#ImagePNG+height) : <code>number</code>
+        * [.bitDepth](#ImagePNG+bitDepth) : <code>number</code>
+        * [.colorType](#ImagePNG+colorType) : <code>number</code>
+        * [.compressionMethod](#ImagePNG+compressionMethod) : <code>number</code>
+        * [.filterMethod](#ImagePNG+filterMethod) : <code>number</code>
+        * [.interlaceMethod](#ImagePNG+interlaceMethod) : <code>number</code>
+        * [.colors](#ImagePNG+colors) : <code>number</code>
+        * [.alpha](#ImagePNG+alpha) : <code>boolean</code>
+        * [.palette](#ImagePNG+palette) : <code>Array.&lt;number&gt;</code> \| <code>Uint8Array</code>
+        * [.pixels](#ImagePNG+pixels) : <code>Uint8Array</code>
+        * [.transparency](#ImagePNG+transparency) : <code>Uint8Array</code>
+        * [.physical](#ImagePNG+physical) : <code>object</code>
+            * [.width](#ImagePNG+physical.width) : <code>number</code>
+            * [.height](#ImagePNG+physical.height) : <code>number</code>
+            * [.unit](#ImagePNG+physical.unit) : <code>number</code>
+        * [.dataChunks](#ImagePNG+dataChunks) : <code>Array.&lt;Uint8Array&gt;</code>
+        * [.header](#ImagePNG+header) : <code>Array</code> \| <code>Uint8Array</code>
         * [.setBitDepth(bitDepth)](#ImagePNG+setBitDepth)
         * [.setColorType(colorType)](#ImagePNG+setColorType)
         * [.setCompressionMethod(compressionMethod)](#ImagePNG+setCompressionMethod)
@@ -145,6 +163,120 @@ const length = image.pixels.length;
 const pixel = image.getPixel(0, 0);
  ➜ [255, 255, 255, 255]
 ```
+<a name="ImagePNG+width"></a>
+
+### imagePNG.width : <code>number</code>
+Pixel Width
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+height"></a>
+
+### imagePNG.height : <code>number</code>
+Pixel Height
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+bitDepth"></a>
+
+### imagePNG.bitDepth : <code>number</code>
+Image Bit Depth, one of: 1, 2, 4, 8, 16
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+colorType"></a>
+
+### imagePNG.colorType : <code>number</code>
+Defines pixel structure, one of: 0, 2, 3, 4, 6
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+compressionMethod"></a>
+
+### imagePNG.compressionMethod : <code>number</code>
+Type of compression, always 0
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+filterMethod"></a>
+
+### imagePNG.filterMethod : <code>number</code>
+Type of filtering, always 0
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+interlaceMethod"></a>
+
+### imagePNG.interlaceMethod : <code>number</code>
+Type of interlacing, one of: 0, 1
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+colors"></a>
+
+### imagePNG.colors : <code>number</code>
+Number of bytes for each pixel
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+alpha"></a>
+
+### imagePNG.alpha : <code>boolean</code>
+True when the image has an alpha transparency layer
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+palette"></a>
+
+### imagePNG.palette : <code>Array.&lt;number&gt;</code> \| <code>Uint8Array</code>
+Raw Color data
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+pixels"></a>
+
+### imagePNG.pixels : <code>Uint8Array</code>
+Raw Image Pixel data
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+transparency"></a>
+
+### imagePNG.transparency : <code>Uint8Array</code>
+Raw Transparency data
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+physical"></a>
+
+### imagePNG.physical : <code>object</code>
+physical - Object containing physical dimension information
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+
+* [.physical](#ImagePNG+physical) : <code>object</code>
+    * [.width](#ImagePNG+physical.width) : <code>number</code>
+    * [.height](#ImagePNG+physical.height) : <code>number</code>
+    * [.unit](#ImagePNG+physical.unit) : <code>number</code>
+
+<a name="ImagePNG+physical.width"></a>
+
+#### physical.width : <code>number</code>
+Physical Dimension Width
+
+**Kind**: static property of [<code>physical</code>](#ImagePNG+physical)  
+<a name="ImagePNG+physical.height"></a>
+
+#### physical.height : <code>number</code>
+Physical Dimension Height
+
+**Kind**: static property of [<code>physical</code>](#ImagePNG+physical)  
+<a name="ImagePNG+physical.unit"></a>
+
+#### physical.unit : <code>number</code>
+Physical Dimension Units, with 0 being unknown and 1 being Meters
+
+**Kind**: static property of [<code>physical</code>](#ImagePNG+physical)  
+<a name="ImagePNG+dataChunks"></a>
+
+### imagePNG.dataChunks : <code>Array.&lt;Uint8Array&gt;</code>
+Image Data pieces
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
+<a name="ImagePNG+header"></a>
+
+### imagePNG.header : <code>Array</code> \| <code>Uint8Array</code>
+PNG Signature from the data
+
+**Kind**: instance property of [<code>ImagePNG</code>](#ImagePNG)  
 <a name="ImagePNG+setBitDepth"></a>
 
 ### imagePNG.setBitDepth(bitDepth)
