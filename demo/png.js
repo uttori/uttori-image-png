@@ -234,8 +234,8 @@ var inffast = function inflate_fast(strm, start) {
               }
             }
           } else if ((op & 64) === 0) {
-            here = dcode[(here & 0xffff) + (
-            hold & (1 << op) - 1)];
+            here = dcode[(here & 0xffff
+            ) + (hold & (1 << op) - 1)];
             continue dodist;
           } else {
             strm.msg = 'invalid distance code';
@@ -245,8 +245,8 @@ var inffast = function inflate_fast(strm, start) {
           break;
         }
       } else if ((op & 64) === 0) {
-        here = lcode[(here & 0xffff) + (
-        hold & (1 << op) - 1)];
+        here = lcode[(here & 0xffff
+        ) + (hold & (1 << op) - 1)];
         continue dolen;
       } else if (op & 32) {
         state.mode = TYPE$1;
@@ -801,22 +801,22 @@ const inflate$1 = (strm, flush) => {
           state.head.done = false;
         }
         if (!(state.wrap & 1) ||
-        (((hold & 0xff) <<
-        8) + (hold >> 8)) % 31) {
+        (((hold & 0xff
+        ) << 8) + (hold >> 8)) % 31) {
           strm.msg = 'incorrect header check';
           state.mode = BAD;
           break;
         }
-        if ((hold & 0x0f) !==
-        Z_DEFLATED) {
+        if ((hold & 0x0f
+        ) !== Z_DEFLATED) {
           strm.msg = 'unknown compression method';
           state.mode = BAD;
           break;
         }
         hold >>>= 4;
         bits -= 4;
-        len = (hold & 0x0f) +
-        8;
+        len = (hold & 0x0f
+        ) + 8;
         if (state.wbits === 0) {
           state.wbits = len;
         } else if (len > state.wbits) {
@@ -1085,7 +1085,8 @@ const inflate$1 = (strm, flush) => {
         ;
         hold >>>= 1;
         bits -= 1;
-        switch (hold & 0x03) {
+        switch (hold & 0x03
+        ) {
           case 0:
             state.mode = STORED;
             break;
@@ -1164,16 +1165,16 @@ const inflate$1 = (strm, flush) => {
           hold += input[next++] << bits;
           bits += 8;
         }
-        state.nlen = (hold & 0x1f) +
-        257;
+        state.nlen = (hold & 0x1f
+        ) + 257;
         hold >>>= 5;
         bits -= 5;
-        state.ndist = (hold & 0x1f) +
-        1;
+        state.ndist = (hold & 0x1f
+        ) + 1;
         hold >>>= 5;
         bits -= 5;
-        state.ncode = (hold & 0x0f) +
-        4;
+        state.ncode = (hold & 0x0f
+        ) + 4;
         hold >>>= 4;
         bits -= 4;
         if (state.nlen > 286 || state.ndist > 30) {
@@ -1380,8 +1381,8 @@ const inflate$1 = (strm, flush) => {
           last_op = here_op;
           last_val = here_val;
           for (;;) {
-            here = state.lencode[last_val + ((hold & (1 << last_bits + last_op) - 1) >>
-            last_bits)];
+            here = state.lencode[last_val + ((hold & (1 << last_bits + last_op) - 1
+            ) >> last_bits)];
             here_bits = here >>> 24;
             here_op = here >>> 16 & 0xff;
             here_val = here & 0xffff;
@@ -1459,8 +1460,8 @@ const inflate$1 = (strm, flush) => {
           last_op = here_op;
           last_val = here_val;
           for (;;) {
-            here = state.distcode[last_val + ((hold & (1 << last_bits + last_op) - 1) >>
-            last_bits)];
+            here = state.distcode[last_val + ((hold & (1 << last_bits + last_op) - 1
+            ) >> last_bits)];
             here_bits = here >>> 24;
             here_op = here >>> 16 & 0xff;
             here_val = here & 0xffff;
@@ -1647,8 +1648,8 @@ const inflate$1 = (strm, flush) => {
 const inflateEnd = strm => {
   if (!strm || !strm.state
   ) {
-      return Z_STREAM_ERROR$1;
-    }
+    return Z_STREAM_ERROR$1;
+  }
   let state = strm.state;
   if (state.window) {
     state.window = null;
@@ -1676,8 +1677,8 @@ const inflateSetDictionary = (strm, dictionary) => {
   if (!strm
   || !strm.state
   ) {
-      return Z_STREAM_ERROR$1;
-    }
+    return Z_STREAM_ERROR$1;
+  }
   state = strm.state;
   if (state.wrap !== 0 && state.mode !== DICT) {
     return Z_STREAM_ERROR$1;
@@ -1760,6 +1761,9 @@ for (let q = 0; q < 256; q++) {
 }
 _utf8len[254] = _utf8len[254] = 1;
 strings$1.string2buf = str => {
+  if (typeof TextEncoder === 'function' && TextEncoder.prototype.encode) {
+    return new TextEncoder().encode(str);
+  }
   let buf,
       c,
       c2,
@@ -1819,8 +1823,11 @@ const buf2binstring = (buf, len) => {
   return result;
 };
 strings$1.buf2string = (buf, max) => {
-  let i, out;
   const len = max || buf.length;
+  if (typeof TextDecoder === 'function' && TextDecoder.prototype.decode) {
+    return new TextDecoder().decode(buf.subarray(0, max));
+  }
+  let i, out;
   const utf16buf = new Array(len * 2);
   for (out = 0, i = 0; i < len;) {
     let c = buf[i++];
@@ -2080,12 +2087,73 @@ inflate$3.inflateRaw = inflateRaw;
 inflate$3.ungzip = inflate;
 inflate$3.constants = constants;
 
-class DataBuffer$2 {
-  constructor(input) {
-    if (!input) {
-      const error = 'Missing input data.';
-      throw new TypeError(error);
+class UnderflowError$1 extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'UnderflowError';
+    this.stack = new Error(message).stack;
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, this.constructor);
     }
+  }
+}
+var underflowError = UnderflowError$1;
+
+const float48$1 = uint8 => {
+  let mantissa = 0;
+  let exponent = uint8[0];
+  if (exponent === 0) {
+    return 0;
+  }
+  exponent = uint8[0] - 0x81;
+  for (let i = 1; i <= 4; i++) {
+    mantissa += uint8[i];
+    mantissa /= 256;
+  }
+  mantissa += uint8[5] & 0x7F;
+  mantissa /= 128;
+  mantissa += 1;
+  if (uint8[5] & 0x80) {
+    mantissa = -mantissa;
+  }
+  const output = mantissa * 2 ** exponent;
+  return Number.parseFloat(output.toFixed(4));
+};
+const float80$1 = uint8 => {
+  const uint32 = new Uint32Array(uint8.buffer, uint8.byteOffset, uint8.byteLength / 4);
+  const [high, low] = [...uint32];
+  const a0 = uint8[9];
+  const a1 = uint8[8];
+  const sign = 1 - (a0 >>> 7) * 2;
+  let exponent = (a0 & 0x7F) << 8 | a1;
+  if (exponent === 0 && low === 0 && high === 0) {
+    return 0;
+  }
+  if (exponent === 0x7FFF) {
+    if (low === 0 && high === 0) {
+      return sign * Number.POSITIVE_INFINITY;
+    }
+    return Number.NaN;
+  }
+  exponent -= 0x3FFF;
+  let out = low * 2 ** (exponent - 31);
+  out += high * 2 ** (exponent - 63);
+  return sign * out;
+};
+var dataHelpers = {
+  float48: float48$1,
+  float80: float80$1
+};
+
+let debug$1 = () => {};
+const UnderflowError = underflowError;
+const {
+  float48,
+  float80
+} = dataHelpers;
+class DataBuffer$1 {
+  constructor(input) {
+    this.writing = false;
     this.data = null;
     if (typeof Buffer !== 'undefined' && Buffer.isBuffer(input)) {
       this.data = Buffer.from(input);
@@ -2099,23 +2167,31 @@ class DataBuffer$2 {
       this.data = new Uint8Array(input);
     } else if (typeof input === 'number') {
       this.data = new Uint8Array(input);
-    } else if (input instanceof DataBuffer$2) {
+    } else if (input instanceof DataBuffer$1) {
       this.data = input.data;
-    } else if (input.buffer && input.buffer instanceof ArrayBuffer) {
+    } else if (input && input.buffer && input.buffer instanceof ArrayBuffer) {
       this.data = new Uint8Array(input.buffer, input.byteOffset, input.length * input.BYTES_PER_ELEMENT);
+    } else if (typeof input === 'undefined') {
+      this.writing = true;
+      this.data = new Uint8Array();
     } else {
       const error = `Unknown type of input for DataBuffer: ${typeof input}`;
       throw new TypeError(error);
     }
-    this.length = this.data.length;
     this.next = null;
     this.prev = null;
+    this.nativeEndian = new Uint16Array(new Uint8Array([0x12, 0x34]).buffer)[0] === 0x3412;
+    this.offset = 0;
+    this.buffer = [...this.data];
   }
   static allocate(size) {
-    return new DataBuffer$2(size);
+    return new DataBuffer$1(size);
+  }
+  get length() {
+    return this.data.length;
   }
   compare(input, offset = 0) {
-    const buffer = new DataBuffer$2(input);
+    const buffer = new DataBuffer$1(input);
     const {
       length
     } = buffer;
@@ -2134,286 +2210,86 @@ class DataBuffer$2 {
     return true;
   }
   copy() {
-    return new DataBuffer$2(new Uint8Array(this.data));
+    return new DataBuffer$1(new Uint8Array(this.data.slice(0)));
   }
   slice(position, length = this.length) {
     if (position === 0 && length >= this.length) {
-      return new DataBuffer$2(this.data);
+      return new DataBuffer$1(this.data);
     }
-    return new DataBuffer$2(this.data.subarray(position, position + length));
-  }
-}
-var dataBuffer = DataBuffer$2;
-
-let debug$2 = () => {};
-class DataBufferList$2 {
-  constructor(buffers) {
-    this.first = null;
-    this.last = null;
-    this.totalBuffers = 0;
-    this.availableBytes = 0;
-    this.availableBuffers = 0;
-    if (buffers && Array.isArray(buffers)) {
-      for (const buffer of buffers) {
-        this.append(buffer);
-      }
-    }
-  }
-  copy() {
-    const result = new DataBufferList$2();
-    result.first = this.first;
-    result.last = this.last;
-    result.totalBuffers = this.totalBuffers;
-    result.availableBytes = this.availableBytes;
-    result.availableBuffers = this.availableBuffers;
-    return result;
-  }
-  append(buffer) {
-    buffer.prev = this.last;
-    if (this.last) {
-      this.last.next = buffer;
-    }
-    this.last = buffer;
-    if (this.first == null) {
-      this.first = buffer;
-    }
-    this.availableBytes += buffer.length;
-    this.availableBuffers++;
-    this.totalBuffers++;
-    debug$2('append:', this.totalBuffers);
-    return this.totalBuffers;
-  }
-  moreAvailable() {
-    if (this.first && this.first.next != null) {
-      return true;
-    }
-    return false;
-  }
-  advance() {
-    if (this.first) {
-      this.availableBytes -= this.first.length;
-      this.availableBuffers--;
-    }
-    if (this.first && this.first.next) {
-      this.first = this.first.next;
-      return true;
-    }
-    this.first = null;
-    return false;
-  }
-  rewind() {
-    if (this.first && !this.first.prev) {
-      return false;
-    }
-    this.first = this.first ? this.first.prev : this.last;
-    if (this.first) {
-      this.availableBytes += this.first.length;
-      this.availableBuffers++;
-    }
-    return this.first != null;
-  }
-  reset() {
-    while (this.rewind()) {
-      continue;
-    }
-  }
-}
-var dataBufferList = DataBufferList$2;
-
-let debug$1 = () => {};
-const DataBuffer$1 = dataBuffer;
-const DataBufferList$1 = dataBufferList;
-class UnderflowError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'UnderflowError';
-    this.stack = new Error(message).stack;
-    if (typeof Error.captureStackTrace === 'function') {
-      Error.captureStackTrace(this, this.constructor);
-    }
-  }
-}
-class DataStream$1 {
-  constructor(list, options = {}) {
-    options.size = options.size || 16;
-    if (options && options.size % 8 !== 0) {
-      options.size += 8 - options.size % 8;
-    }
-    this.size = options.size;
-    this.buf = new ArrayBuffer(this.size);
-    this.uint8 = new Uint8Array(this.buf);
-    this.int8 = new Int8Array(this.buf);
-    this.uint16 = new Uint16Array(this.buf);
-    this.int16 = new Int16Array(this.buf);
-    this.uint32 = new Uint32Array(this.buf);
-    this.int32 = new Int32Array(this.buf);
-    this.float32 = new Float32Array(this.buf);
-    this.float64 = new Float64Array(this.buf);
-    this.int64 = new BigInt64Array(this.buf);
-    this.uint64 = new BigUint64Array(this.buf);
-    this.nativeEndian = new Uint16Array(new Uint8Array([0x12, 0x34]).buffer)[0] === 0x3412;
-    this.list = list;
-    this.localOffset = 0;
-    this.offset = 0;
-  }
-  static fromData(data) {
-    const buffer = new DataBuffer$1(data);
-    const list = new DataBufferList$1();
-    list.append(buffer);
-    return new DataStream$1(list, {
-      size: buffer.length
-    });
-  }
-  static fromBuffer(buffer) {
-    const list = new DataBufferList$1();
-    list.append(buffer);
-    return new DataStream$1(list, {
-      size: buffer.length
-    });
-  }
-  compare(input, offset = 0) {
-    if (!input || !input.list || !input.list.availableBytes) {
-      return false;
-    }
-    let {
-      availableBytes
-    } = input.list;
-    if (offset) {
-      availableBytes -= offset;
-      this.seek(offset);
-      input.seek(offset);
-    }
-    let local;
-    let external;
-    for (let i = 0; i < availableBytes; i++) {
-      local = this.readUInt8();
-      external = input.readUInt8();
-      if (local !== external) {
-        return false;
-      }
-    }
-    return true;
-  }
-  next(input) {
-    if (!input || typeof input.length !== 'number' || input.length === 0) {
-      return false;
-    }
-    if (!this.available(input.length)) {
-      debug$1(`Insufficient Bytes: ${input.length} <= ${this.remainingBytes()}`);
-      return false;
-    }
-    debug$1('next: this.offset =', this.offset);
-    for (let i = 0; i < input.length; i++) {
-      const data = this.peekUInt8(this.offset + i);
-      if (input[i] !== data) {
-        debug$1('next: first failed match at', i, ', where:', input[i]);
-        return false;
-      }
-    }
-    return true;
-  }
-  copy() {
-    const result = new DataStream$1(this.list.copy(), {
-      size: this.size
-    });
-    result.localOffset = this.localOffset;
-    result.offset = this.offset;
-    return result;
-  }
-  available(bytes) {
-    return bytes <= this.remainingBytes();
-  }
-  availableAt(bytes, offset) {
-    return bytes <= this.list.availableBytes - offset;
+    return new DataBuffer$1(this.data.slice(position, position + length));
   }
   remainingBytes() {
-    return this.list.availableBytes - this.localOffset;
+    return this.length - this.offset;
+  }
+  available(bytes) {
+    return this.writing || bytes <= this.remainingBytes();
+  }
+  availableAt(bytes, offset) {
+    return this.writing || bytes <= this.length - offset;
   }
   advance(bytes) {
     if (!this.available(bytes)) {
       throw new UnderflowError(`Insufficient Bytes: ${bytes} <= ${this.remainingBytes()}`);
     }
-    this.localOffset += bytes;
     this.offset += bytes;
-    while (this.list.first && this.localOffset >= this.list.first.length && this.list.moreAvailable()) {
-      this.localOffset -= this.list.first.length;
-      this.list.advance();
-    }
-    return this;
+    debug$1('advance: offset', this.offset);
   }
   rewind(bytes) {
     if (bytes > this.offset) {
       throw new UnderflowError(`Insufficient Bytes: ${bytes} > ${this.offset}`);
     }
-    this.localOffset -= bytes;
     this.offset -= bytes;
-    while (this.list.first.prev && this.localOffset < 0) {
-      this.list.rewind();
-      this.localOffset += this.list.first.length;
-    }
-    return this;
+    debug$1('rewind: offset', this.offset);
   }
   seek(position) {
+    debug$1(`seek: from ${this.offset} to ${position}`);
     if (position > this.offset) {
-      return this.advance(position - this.offset);
+      this.advance(position - this.offset);
     }
     if (position < this.offset) {
-      return this.rewind(this.offset - position);
+      this.rewind(this.offset - position);
     }
-    return this;
+    debug$1(`seek: offset is ${this.offset}`);
   }
   readUInt8() {
     if (!this.available(1)) {
       throw new UnderflowError('Insufficient Bytes: 1');
     }
-    const output = this.list.first.data[this.localOffset];
-    this.localOffset += 1;
+    const output = this.data[this.offset];
     this.offset += 1;
-    if (this.localOffset === this.list.first.length) {
-      this.localOffset = 0;
-      this.list.advance();
-    }
     return output;
   }
   peekUInt8(offset = 0) {
     if (!this.availableAt(1, offset)) {
       throw new UnderflowError(`Insufficient Bytes: ${offset} + 1`);
     }
-    let buffer = this.list.first;
-    while (buffer) {
-      if (buffer.length > offset) {
-        return buffer.data[offset];
-      }
-      offset -= buffer.length;
-      buffer = buffer.next;
-    }
-    return 0;
+    return this.data[offset];
   }
   read(bytes, littleEndian = false) {
-    if (littleEndian === this.nativeEndian) {
-      for (let i = 0; i < bytes; i++) {
-        this.uint8[i] = this.readUInt8();
+    const uint8 = new Uint8Array(bytes);
+    if (littleEndian) {
+      for (let i = bytes - 1; i >= 0; i--) {
+        uint8[i] = this.readUInt8();
       }
     } else {
-      for (let i = bytes - 1; i >= 0; i--) {
-        this.uint8[i] = this.readUInt8();
+      for (let i = 0; i < bytes; i++) {
+        uint8[i] = this.readUInt8();
       }
     }
-    const output = this.uint8.slice(0, bytes);
-    return output;
+    return uint8;
   }
   peek(bytes, offset = 0, littleEndian = false) {
-    if (littleEndian === this.nativeEndian) {
+    const uint8 = new Uint8Array(bytes);
+    if (littleEndian) {
       for (let i = 0; i < bytes; i++) {
-        this.uint8[i] = this.peekUInt8(offset + i);
+        uint8[bytes - i - 1] = this.peekUInt8(offset + i);
       }
     } else {
       for (let i = 0; i < bytes; i++) {
-        this.uint8[bytes - i - 1] = this.peekUInt8(offset + i);
+        uint8[i] = this.peekUInt8(offset + i);
       }
     }
-    const output = this.uint8.slice(0, bytes);
-    return output;
+    return uint8;
   }
   peekBit(position, length = 1, offset = 0) {
     if (Number.isNaN(position) || !Number.isInteger(position) || position < 0 || position > 7) {
@@ -2426,28 +2302,34 @@ class DataStream$1 {
     return (value << position & 0xFF) >>> 8 - length;
   }
   readInt8() {
-    this.read(1);
-    return this.int8[0];
+    const uint8 = this.read(1);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getInt8(0);
   }
   peekInt8(offset = 0) {
-    this.peek(1, offset);
-    return this.int8[0];
+    const uint8 = this.peek(1, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getInt8(0);
   }
   readUInt16(littleEndian) {
-    this.read(2, littleEndian);
-    return this.uint16[0];
+    const uint8 = this.read(2);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getUint16(0, littleEndian);
   }
   peekUInt16(offset = 0, littleEndian = false) {
-    this.peek(2, offset, littleEndian);
-    return this.uint16[0];
+    const uint8 = this.peek(2, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getUint16(0, littleEndian);
   }
   readInt16(littleEndian = false) {
-    this.read(2, littleEndian);
-    return this.int16[0];
+    const uint8 = this.read(2);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getInt16(0, littleEndian);
   }
   peekInt16(offset = 0, littleEndian = false) {
-    this.peek(2, offset, littleEndian);
-    return this.int16[0];
+    const uint8 = this.peek(2, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getInt16(0, littleEndian);
   }
   readUInt24(littleEndian = false) {
     if (littleEndian) {
@@ -2474,126 +2356,80 @@ class DataStream$1 {
     return (this.peekInt16(offset) << 8) + this.peekUInt8(offset + 2);
   }
   readUInt32(littleEndian = false) {
-    this.read(4, littleEndian);
-    return this.uint32[0];
+    const uint8 = this.read(4);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getUint32(0, littleEndian);
   }
   peekUInt32(offset = 0, littleEndian = false) {
-    this.peek(4, offset, littleEndian);
-    return this.uint32[0];
+    const uint8 = this.peek(4, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getUint32(0, littleEndian);
   }
   readInt32(littleEndian = false) {
-    this.read(4, littleEndian);
-    return this.int32[0];
+    const uint8 = this.read(4);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getInt32(0, littleEndian);
   }
   peekInt32(offset = 0, littleEndian = false) {
-    this.peek(4, offset, littleEndian);
-    return this.int32[0];
+    const uint8 = this.peek(4, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getInt32(0, littleEndian);
   }
   readFloat32(littleEndian = false) {
-    this.read(4, littleEndian);
-    return this.float32[0];
+    const uint8 = this.read(4);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getFloat32(0, littleEndian);
   }
   peekFloat32(offset = 0, littleEndian = false) {
-    this.peek(4, offset, littleEndian);
-    return this.float32[0];
+    const uint8 = this.peek(4, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getFloat32(0, littleEndian);
   }
   readFloat48(littleEndian = false) {
-    this.read(6, littleEndian);
-    return this.float48();
+    const uint8 = this.read(6, littleEndian || this.nativeEndian);
+    return float48(uint8);
   }
   peekFloat48(offset, littleEndian = false) {
-    this.peek(6, offset, littleEndian);
-    return this.float48();
+    const uint8 = this.peek(6, offset, littleEndian || this.nativeEndian);
+    return float48(uint8);
   }
   readFloat64(littleEndian = false) {
-    this.read(8, littleEndian);
-    return this.float64[0];
+    const uint8 = this.read(8);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getFloat64(0, littleEndian);
   }
   peekFloat64(offset = 0, littleEndian = false) {
-    this.peek(8, offset, littleEndian);
-    return this.float64[0];
+    const uint8 = this.peek(8, offset);
+    const view = new DataView(uint8.buffer, 0);
+    return view.getFloat64(0, littleEndian);
   }
-  readFloat80(littleEndian = false) {
-    this.read(10, littleEndian);
-    return this.float80();
+  readFloat80(littleEndian = this.nativeEndian) {
+    const uint8 = this.read(10, littleEndian);
+    return float80(uint8);
   }
-  peekFloat80(offset = 0, littleEndian = false) {
-    this.peek(10, offset, littleEndian);
-    return this.float80();
+  peekFloat80(offset = 0, littleEndian = this.nativeEndian) {
+    const uint8 = this.peek(10, offset, littleEndian);
+    return float80(uint8);
   }
   readBuffer(length) {
-    const result = DataBuffer$1.allocate(length);
-    const to = result.data;
+    const to = new Uint8Array(length);
     for (let i = 0; i < length; i++) {
       to[i] = this.readUInt8();
     }
-    return result;
+    return new DataBuffer$1(to);
   }
   peekBuffer(offset, length) {
-    const result = DataBuffer$1.allocate(length);
-    const to = result.data;
+    const to = new Uint8Array(length);
     for (let i = 0; i < length; i++) {
       to[i] = this.peekUInt8(offset + i);
     }
-    return result;
-  }
-  readSingleBuffer(length) {
-    const result = this.list.first.slice(this.localOffset, length);
-    this.advance(result.length);
-    return result;
-  }
-  peekSingleBuffer(offset, length) {
-    return this.list.first.slice(this.localOffset + offset, length);
+    return new DataBuffer$1(to);
   }
   readString(length, encoding = 'ascii') {
     return this.decodeString(this.offset, length, encoding, true);
   }
   peekString(offset, length, encoding = 'ascii') {
     return this.decodeString(offset, length, encoding, false);
-  }
-  float48() {
-    let mantissa = 0;
-    let exponent = this.uint8[0];
-    if (exponent === 0) {
-      return 0;
-    }
-    exponent = this.uint8[0] - 0x81;
-    for (let i = 1; i <= 4; i++) {
-      mantissa += this.uint8[i];
-      mantissa /= 256;
-    }
-    mantissa += this.uint8[5] & 0x7F;
-    mantissa /= 128;
-    mantissa += 1;
-    if (this.uint8[5] & 0x80) {
-      mantissa = -mantissa;
-    }
-    const output = mantissa * 2 ** exponent;
-    return Number.parseFloat(output.toFixed(4));
-  }
-  float80() {
-    const [high, low] = [...this.uint32];
-    const a0 = this.uint8[9];
-    const a1 = this.uint8[8];
-    const sign = 1 - (a0 >>> 7) * 2;
-    let exponent = (a0 & 0x7F) << 8 | a1;
-    if (exponent === 0 && low === 0 && high === 0) {
-      return 0;
-    }
-    if (exponent === 0x7FFF) {
-      if (low === 0 && high === 0) {
-        return sign * Number.POSITIVE_INFINITY;
-      }
-      return Number.NaN;
-    }
-    exponent -= 0x3FFF;
-    let out = low * 2 ** (exponent - 31);
-    out += high * 2 ** (exponent - 63);
-    return sign * out;
-  }
-  reset() {
-    this.localOffset = 0;
-    this.offset = 0;
   }
   decodeString(offset, length, encoding, advance) {
     encoding = encoding.toLowerCase();
@@ -2608,11 +2444,11 @@ class DataStream$1 {
       case 'latin1':
         {
           while (offset < end) {
-            const char = this.peekUInt8(offset++);
-            if (char === nullEnd) {
+            const character = this.peekUInt8(offset++);
+            if (character === nullEnd) {
               break;
             }
-            result += String.fromCharCode(char);
+            result += String.fromCharCode(character);
           }
           break;
         }
@@ -2703,7 +2539,7 @@ class DataStream$1 {
         }
       default:
         {
-          throw new Error(`Unknown encoding: ${encoding}`);
+          throw new Error(`Unknown Encoding: ${encoding}`);
         }
     }
     if (advance) {
@@ -2711,21 +2547,130 @@ class DataStream$1 {
     }
     return result;
   }
+  reset() {
+    this.offset = 0;
+  }
+  writeUInt8(data, offset = this.offset, advance = true) {
+    this.buffer[offset] = data;
+    if (advance) {
+      this.offset++;
+    }
+  }
+  writeUInt16(data, offset = this.offset, advance = true, littleEndian = false) {
+    if (littleEndian) {
+      this.buffer[offset] = data & 0xFF;
+      this.buffer[offset + 1] = data >> 8;
+    } else {
+      this.buffer[offset] = data >> 8;
+      this.buffer[offset + 1] = data & 0xFF;
+    }
+    if (advance) {
+      this.offset += 2;
+    }
+  }
+  writeUInt24(data, offset = this.offset, advance = true, littleEndian = false) {
+    if (littleEndian) {
+      this.buffer[offset] = data & 0x0000FF;
+      this.buffer[offset + 1] = (data & 0x00FF00) >> 8;
+      this.buffer[offset + 2] = (data & 0xFF0000) >> 16;
+    } else {
+      this.buffer[offset] = (data & 0xFF0000) >> 16;
+      this.buffer[offset + 1] = (data & 0x00FF00) >> 8;
+      this.buffer[offset + 2] = data & 0x0000FF;
+    }
+    if (advance) {
+      this.offset += 3;
+    }
+  }
+  writeUInt32(data, offset = this.offset, advance = true, littleEndian = false) {
+    if (littleEndian) {
+      this.buffer[offset] = data & 0x000000FF;
+      this.buffer[offset + 1] = (data & 0x0000FF00) >> 8;
+      this.buffer[offset + 2] = (data & 0x00FF0000) >> 16;
+      this.buffer[offset + 3] = (data & 0xFF000000) >> 24;
+    } else {
+      this.buffer[offset] = (data & 0xFF000000) >> 24;
+      this.buffer[offset + 1] = (data & 0x00FF0000) >> 16;
+      this.buffer[offset + 2] = (data & 0x0000FF00) >> 8;
+      this.buffer[offset + 3] = data & 0x000000FF;
+    }
+    if (advance) {
+      this.offset += 4;
+    }
+  }
+  writeBytes(data, offset = this.offset, advance = true) {
+    for (let i = 0; i < data.length; i++) {
+      this.buffer[offset + i] = data[i];
+    }
+    if (advance) {
+      this.offset += data.length;
+    }
+  }
+  writeString(string, offset = this.offset, encoding = 'ascii', advance = true) {
+    const data = [];
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+        {
+          for (let i = 0; i < string.length; i++) {
+            data.push(string.charCodeAt(i) & 0xFF);
+          }
+          break;
+        }
+      case 'utf8':
+      case 'utf-8':
+        {
+          for (let i = 0; i < string.length; i++) {
+            let charcode = string.charCodeAt(i);
+            if (charcode < 0x80) {
+              data.push(charcode);
+            } else if (charcode < 0x800) {
+              data.push(0xC0 | charcode >> 6, 0x80 | charcode & 0x3F);
+            } else if (charcode < 0xD800 || charcode >= 0xE000) {
+              data.push(0xE0 | charcode >> 12, 0x80 | charcode >> 6 & 0x3F, 0x80 | charcode & 0x3F);
+            } else {
+              i++;
+              charcode = 0x10000 + ((charcode & 0x3FF) << 10 | string.charCodeAt(i) & 0x3FF);
+              data.push(0xF0 | charcode >> 18, 0x80 | charcode >> 12 & 0x3F, 0x80 | charcode >> 6 & 0x3F, 0x80 | charcode & 0x3F);
+            }
+          }
+          break;
+        }
+      case 'utf16be':
+      case 'utf16le':
+      case 'utf16bom':
+        {
+          const littleEndian = encoding === 'utf16le';
+          for (let i = 0; i < string.length; i++) {
+            const charcode = string.charCodeAt(i);
+            if (littleEndian) {
+              data.push(charcode & 0xFF, charcode / 256 >>> 0);
+            } else {
+              data.push(charcode / 256 >>> 0, charcode & 0xFF);
+            }
+          }
+          break;
+        }
+      default:
+        {
+          throw new Error(`Unknown Encoding: ${encoding}`);
+        }
+    }
+    this.writeBytes(data, offset, advance);
+  }
+  commit() {
+    this.data = new Uint8Array(this.buffer);
+    this.writing = false;
+  }
 }
-var dataStream = DataStream$1;
+var dataBuffer = DataBuffer$1;
 
 let debug = () => {};
 const pako = inflate$3;
 const DataBuffer = dataBuffer;
-const DataBufferList = dataBufferList;
-const DataStream = dataStream;
-class ImagePNG extends DataStream {
-  constructor(list, overrides = {}) {
-    const options = {
-      size: 16,
-      ...overrides
-    };
-    super(list, options);
+class ImagePNG extends DataBuffer {
+  constructor(input) {
+    super(input);
     this.width = 0;
     this.height = 0;
     this.bitDepth = 0;
@@ -2748,20 +2693,11 @@ class ImagePNG extends DataStream {
   }
   static fromFile(data) {
     debug('fromFile:', data.length, data.byteLength);
-    const buffer = new DataBuffer(data);
-    const list = new DataBufferList();
-    list.append(buffer);
-    return new ImagePNG(list, {
-      size: buffer.length
-    });
+    return new ImagePNG(data);
   }
   static fromBuffer(buffer) {
     debug('fromBuffer:', buffer.length);
-    const list = new DataBufferList();
-    list.append(buffer);
-    return new ImagePNG(list, {
-      size: buffer.length
-    });
+    return new ImagePNG(buffer);
   }
   setBitDepth(bitDepth) {
     if (![1, 2, 4, 8, 16].includes(bitDepth)) {
@@ -2889,7 +2825,7 @@ class ImagePNG extends DataStream {
   decodeHeader() {
     debug('decodeHeader: offset =', this.offset);
     if (this.offset !== 0) ;
-    const header = this.read(8, this.nativeEndian);
+    const header = this.read(8);
     const header_buffer = new DataBuffer(header);
     if (!header_buffer.compare([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])) {
       throw new Error('Missing or invalid PNG header.');
@@ -2902,7 +2838,7 @@ class ImagePNG extends DataStream {
       throw new Error(`Invalid Chunk Length: ${0xFFFFFFFF & length}`);
     }
     const type = this.readString(4);
-    const chunk = this.read(length, this.nativeEndian);
+    const chunk = this.read(length);
     const crc = this.readUInt32();
     debug('decodeChunk type', type, 'chunk size', length, 'crc', crc.toString(16).toUpperCase());
     switch (type) {
@@ -2928,7 +2864,7 @@ class ImagePNG extends DataStream {
     return type;
   }
   decodeIHDR(chunk) {
-    const header = DataStream.fromData(chunk);
+    const header = new DataBuffer(chunk);
     const width = header.readUInt32();
     const height = header.readUInt32();
     const bit_depth = header.readUInt8();
@@ -2965,7 +2901,7 @@ class ImagePNG extends DataStream {
   }
   decodePHYS(chunk) {
     const INCH_TO_METERS = 0.0254;
-    const buffer = DataStream.fromData(chunk);
+    const buffer = new DataBuffer(chunk);
     let width = buffer.readUInt32();
     let height = buffer.readUInt32();
     const unit = buffer.readUInt8();
@@ -3018,12 +2954,12 @@ class ImagePNG extends DataStream {
     const bytes_per_pixel = Math.max(1, this.colors * this.bitDepth / 8);
     const color_bytes_per_row = bytes_per_pixel * this.width;
     this.pixels = new Uint8Array(bytes_per_pixel * this.width * this.height);
-    const chunk = DataStream.fromData(data);
+    const chunk = new DataBuffer(data);
     debug('interlaceNone: bytes:', chunk.remainingBytes());
     let offset = 0;
     while (chunk.remainingBytes() > 0) {
       const type = chunk.readUInt8();
-      const scanline = chunk.remainingBytes() < color_bytes_per_row ? chunk.read(chunk.remainingBytes(), this.nativeEndian) : chunk.read(color_bytes_per_row, this.nativeEndian);
+      const scanline = chunk.remainingBytes() < color_bytes_per_row ? chunk.read(chunk.remainingBytes()) : chunk.read(color_bytes_per_row);
       switch (type) {
         case 0:
           {

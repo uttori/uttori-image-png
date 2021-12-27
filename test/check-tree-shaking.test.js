@@ -59,9 +59,9 @@ test('Tree Shaking: { DataBuffer, DataBufferList, DataStream }', async (t) => {
 
   // Zlib sum should be (1 (input) + 3 (data tools) + 1 shake-me) number of expected modules
   t.deepEqual(Object.keys(output.output[0].modules).map((f) => path.basename(f)), [
+    'underflow-error.js',
+    'data-helpers.js',
     'data-buffer.js',
-    'data-buffer-list.js',
-    'data-stream.js',
     'data-image-png.js',
     'shake-me.mjs',
   ]);

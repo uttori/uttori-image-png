@@ -44,7 +44,7 @@ const pixel = image.getPixel(0, 0);
 ## Classes
 
 <dl>
-<dt><a href="#ImagePNG">ImagePNG</a></dt>
+<dt><a href="#ImagePNG">ImagePNG</a> ⇐ <code>DataBuffer</code></dt>
 <dd><p>PNG Decoder</p>
 </dd>
 </dl>
@@ -58,10 +58,11 @@ const pixel = image.getPixel(0, 0);
 
 <a name="ImagePNG"></a>
 
-## ImagePNG
+## ImagePNG ⇐ <code>DataBuffer</code>
 PNG Decoder
 
 **Kind**: global class  
+**Extends**: <code>DataBuffer</code>  
 **See**
 
 - [Chunk Specifications](http://www.libpng.org/pub/png/spec/1.2/PNG-Chunks.html)
@@ -97,8 +98,8 @@ PNG Decoder
 | header | <code>Uint8Array</code> | PNG Signature from the data |
 
 
-* [ImagePNG](#ImagePNG)
-    * [new ImagePNG(list, [overrides])](#new_ImagePNG_new)
+* [ImagePNG](#ImagePNG) ⇐ <code>DataBuffer</code>
+    * [new ImagePNG(input)](#new_ImagePNG_new)
     * _instance_
         * [.setBitDepth(bitDepth)](#ImagePNG+setBitDepth)
         * [.setColorType(colorType)](#ImagePNG+setColorType)
@@ -126,15 +127,13 @@ PNG Decoder
 
 <a name="new_ImagePNG_new"></a>
 
-### new ImagePNG(list, [overrides])
+### new ImagePNG(input)
 Creates a new ImagePNG.
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| list | <code>DataBufferList</code> |  | The DataBufferList of the image to process. |
-| [overrides] | <code>object</code> |  | Options for this instance. |
-| [overrides.size] | <code>number</code> | <code>16</code> | ArrayBuffer byteLength for the underlying binary parsing. |
+| Param | Type | Description |
+| --- | --- | --- |
+| input | <code>Array</code> \| <code>ArrayBuffer</code> \| <code>Buffer</code> \| <code>DataBuffer</code> \| <code>Int8Array</code> \| <code>Int16Array</code> \| <code>Int32Array</code> \| <code>number</code> \| <code>string</code> \| <code>Uint8Array</code> \| <code>Uint16Array</code> \| <code>Uint32Array</code> | The data to process. |
 
 **Example** *(new ImagePNG(list, options))*  
 ```js
@@ -394,7 +393,7 @@ Unit specifier:          1 byte
 
 ### imagePNG.decodeIEND(_chunk)
 Decode the IEND (Image trailer) chunk.
-The IEND chunk marks the end of the PNG datastream. The chunk's data field is empty.
+The IEND chunk marks the end of the PNG DataBuffer. The chunk's data field is empty.
 
 **Kind**: instance method of [<code>ImagePNG</code>](#ImagePNG)  
 **See**: [Image Trailer](http://www.w3.org/TR/2003/REC-PNG-20031110/#11IEND)  
@@ -467,7 +466,7 @@ Creates a new ImagePNG from file data.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>Array</code> \| <code>ArrayBuffer</code> \| <code>Buffer</code> \| <code>DataBuffer</code> \| <code>Int8Array</code> \| <code>Int16Array</code> \| <code>number</code> \| <code>string</code> \| <code>Uint8Array</code> \| <code>Uint32Array</code> | The data of the image to process. |
+| data | <code>Array</code> \| <code>ArrayBuffer</code> \| <code>Buffer</code> \| <code>DataBuffer</code> \| <code>Int8Array</code> \| <code>Int16Array</code> \| <code>Int32Array</code> \| <code>number</code> \| <code>string</code> \| <code>Uint8Array</code> \| <code>Uint16Array</code> \| <code>Uint32Array</code> | The data of the image to process. |
 
 <a name="ImagePNG.fromBuffer"></a>
 

@@ -1,17 +1,13 @@
 const test = require('ava');
 const { FileUtility } = require('uttori-utilities');
-const { DataBuffer, DataBufferList } = require('@uttori/data-tools');
+const { DataBuffer } = require('@uttori/data-tools');
 const { ImagePNG } = require('../src');
 
 test('constructor(list, options): can initialize', async (t) => {
   const data = await FileUtility.readFile('./test/assets', '512x478x24', 'png', null);
-  const buffer = new DataBuffer(data);
-  const list = new DataBufferList();
-  list.append(buffer);
-
   let image = {};
   t.notThrows(() => {
-    image = new ImagePNG(list);
+    image = new ImagePNG(data);
   });
   t.is(image.colors, 3);
 });

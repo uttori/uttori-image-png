@@ -1,23 +1,28 @@
 {
   "include": [
+    "node_modules/@uttori/**/src/*",
     "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "test/**/*.js"
+    "test"
   ],
   "compilerOptions": {
     "allowJs": true,
-    "checkJs": false,
+    "checkJs": true,
     "declaration": true,
+    "downlevelIteration": true,
     "emitDeclarationOnly": true,
     "extendedDiagnostics": true,
+    "module": "nodenext",
     "moduleResolution": "node",
     "noEmit": false,
     "outFile": "types/index.d.ts",
     "removeComments": true,
+    "sourceMap": true,
     "strict": false,
     "target": "esnext",
+    "resolveJsonModule": true,
     "skipLibCheck": true
   }
 }

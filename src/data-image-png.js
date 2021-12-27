@@ -1,11 +1,8 @@
-/* eslint-disable node/no-missing-require */
-/* eslint-disable import/no-unresolved */
+/* eslint-disable import/no-unresolved, node/no-missing-require */
 /** @type {Function} */
 let debug = () => {}; /* istanbul ignore next */ if (process.env.UTTORI_IMAGEPNG_DEBUG) { try { debug = require('debug')('ImagePNG'); } catch {} }
 const zlib = require('zlib');
 const DataBuffer = require('@uttori/data-tools/data-buffer');
-const DataBufferList = require('@uttori/data-tools/data-buffer-list');
-const DataStream = require('@uttori/data-tools/data-stream');
 
 /**
  * PNG Decoder
@@ -45,46 +42,58 @@ const DataStream = require('@uttori/data-tools/data-stream');
  * const pixel = image.getPixel(0, 0);
  *  ➜ [255, 255, 255, 255]
  * @class
+ * @augments DataBuffer
  */
-class ImagePNG extends DataStream {
+class ImagePNG extends DataBuffer {
   /**
    * Creates a new ImagePNG.
    *
-   * @param {DataBufferList} list - The DataBufferList of the image to process.
-   * @param {object} [overrides] - Options for this instance.
-   * @param {number} [overrides.size=16] - ArrayBuffer byteLength for the underlying binary parsing.
-   * @class
+   * @param {Array|ArrayBuffer|Buffer|DataBuffer|Int8Array|Int16Array|Int32Array|number|string|Uint8Array|Uint16Array|Uint32Array} input The data to process.
    */
-  constructor(list, overrides = {}) {
-    const options = {
-      size: 16,
-      ...overrides,
-    };
-    super(list, options);
+  constructor(input) {
+    super(input);
 
-    // PNG Specific Details
+    /** @type {number} Pixel Width */
     this.width = 0;
+    /** @type {number} Pixel Height */
     this.height = 0;
+    /** @type {number} Image Bit Depth, one of: 1, 2, 4, 8, 16 */
     this.bitDepth = 0;
+    /** @type {number} Defines pixel structure, one of: 0, 2, 3, 4, 6 */
     this.colorType = 0;
+    /** @type {number} Type of compression, always 0 */
     this.compressionMethod = 0;
+    /** @type {number} Type of filtering, always 0 */
     this.filterMethod = 0;
+    /** @type {number} Type of interlacing, one of: 0, 1 */
     this.interlaceMethod = 0;
 
+    /** @type {number} Number of bytes for each pixel */
     this.colors = 0;
+    /** @type {boolean} True when the image has an alpha transparency layer */
     this.alpha = false;
 
+    /** @type {number[] | Uint8Array} Raw Color data */
     this.palette = [];
+    /** @type {Uint8Array} Raw Image Pixel data */
     this.pixels = undefined;
+    /** @type {Uint8Array} Raw Transparency data */
     this.transparency = undefined;
 
+    /** @type {object} physical - Object containing physical dimension information */
     this.physical = {
+      /** @type {number} Physical Dimension Width */
       width: 0,
+      /** @type {number} Physical Dimension Height */
       height: 0,
+      /** @type {number} Physical Dimension Units, with 0 being unknown and 1 being Meters */
       unit: 0,
     };
 
+    /** @type {Uint8Array[]} Image Data pieces */
     this.dataChunks = [];
+    /** @type {Array|Uint8Array} PNG Signature from the data */
+    this.header = [];
 
     this.parse();
   }
@@ -92,16 +101,13 @@ class ImagePNG extends DataStream {
   /**
    * Creates a new ImagePNG from file data.
    *
-   * @param {Array|ArrayBuffer|Buffer|DataBuffer|Int8Array|Int16Array|number|string|Uint8Array|Uint32Array} data - The data of the image to process.
+   * @param {Array|ArrayBuffer|Buffer|DataBuffer|Int8Array|Int16Array|Int32Array|number|string|Uint8Array|Uint16Array|Uint32Array} data - The data of the image to process.
    * @returns {ImagePNG} the new ImagePNG instance for the provided file data
    * @static
    */
   static fromFile(data) {
-    debug('fromFile:', data.length, data.byteLength);
-    const buffer = new DataBuffer(data);
-    const list = new DataBufferList();
-    list.append(buffer);
-    return new ImagePNG(list, { size: buffer.length });
+    debug('fromFile:', data);
+    return new ImagePNG(data);
   }
 
   /**
@@ -113,9 +119,7 @@ class ImagePNG extends DataStream {
    */
   static fromBuffer(buffer) {
     debug('fromBuffer:', buffer.length);
-    const list = new DataBufferList();
-    list.append(buffer);
-    return new ImagePNG(list, { size: buffer.length });
+    return new ImagePNG(buffer);
   }
 
   /**
@@ -335,7 +339,8 @@ class ImagePNG extends DataStream {
       debug('Offset should be at 0 to read the header.');
     }
 
-    const header = this.read(8, this.nativeEndian);
+    const header = this.read(8);
+    debug('header:', header);
     const header_buffer = new DataBuffer(header);
     if (!header_buffer.compare([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])) {
       throw new Error('Missing or invalid PNG header.');
@@ -368,7 +373,7 @@ class ImagePNG extends DataStream {
     }
 
     const type = this.readString(4);
-    const chunk = this.read(length, this.nativeEndian);
+    const chunk = this.read(length);
     const crc = this.readUInt32();
 
     debug('decodeChunk type', type, 'chunk size', length, 'crc', crc.toString(16).toUpperCase());
@@ -413,7 +418,7 @@ class ImagePNG extends DataStream {
    */
   decodeIHDR(chunk) {
     debug('decodeIHDR');
-    const header = DataStream.fromData(chunk);
+    const header = new DataBuffer(chunk);
 
     const width = header.readUInt32();
     const height = header.readUInt32();
@@ -489,7 +494,7 @@ class ImagePNG extends DataStream {
    */
   decodePHYS(chunk) {
     const INCH_TO_METERS = 0.0254;
-    const buffer = DataStream.fromData(chunk);
+    const buffer = new DataBuffer(chunk);
     let width = buffer.readUInt32();
     let height = buffer.readUInt32();
     const unit = buffer.readUInt8();
@@ -511,7 +516,7 @@ class ImagePNG extends DataStream {
 
   /**
    * Decode the IEND (Image trailer) chunk.
-   * The IEND chunk marks the end of the PNG datastream. The chunk's data field is empty.
+   * The IEND chunk marks the end of the PNG DataBuffer. The chunk's data field is empty.
    *
    * @param {Uint8Array} _chunk - Unused.
    * @see {@link http://www.w3.org/TR/2003/REC-PNG-20031110/#11IEND|Image Trailer}
@@ -588,12 +593,12 @@ class ImagePNG extends DataStream {
 
     this.pixels = new Uint8Array(bytes_per_pixel * this.width * this.height);
 
-    const chunk = DataStream.fromData(data);
+    const chunk = new DataBuffer(data);
     debug('interlaceNone: bytes:', chunk.remainingBytes(), 'bytes_per_pixel:', bytes_per_pixel, 'color_bytes_per_row:', color_bytes_per_row);
     let offset = 0;
     while (chunk.remainingBytes() > 0) {
       const type = chunk.readUInt8();
-      const scanline = chunk.remainingBytes() < color_bytes_per_row ? chunk.read(chunk.remainingBytes(), this.nativeEndian) : chunk.read(color_bytes_per_row, this.nativeEndian);
+      const scanline = chunk.read(chunk.remainingBytes() < color_bytes_per_row ? chunk.remainingBytes() : color_bytes_per_row);
       // debug('chunk filter type:', type);
       switch (type) {
         case 0: {
