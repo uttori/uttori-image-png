@@ -8,6 +8,10 @@
 [![Minified + GZip](https://badgen.net/bundlephobia/minzip/@uttori/image-png)](https://bundlephobia.com/result?p=@uttori/image-png)
 [![Minified](https://badgen.net/bundlephobia/min/@uttori/image-png)](https://bundlephobia.com/result?p=@uttori/image-png)
 
+# Package Moved
+
+No longer supported, project has been integrated into https://github.com/uttori/uttori-data-tools directly.
+
 # Uttori ImagePNG
 
 A PNG Decoder and meta data reading utility.
